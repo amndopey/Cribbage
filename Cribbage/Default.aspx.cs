@@ -12,18 +12,7 @@ namespace Cribbage
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            //List<int> myList = PointCounter.DealHand();
-            List<int> myList = new List<int> { 11, 13, 12, 5, 10, 5 };
-
-            foreach (int card in myList)
-                Label1.Text = Label1.Text + " " + card.ToString();
-
-            List<int> bestHand = Compute.FindBestHand(myList);
-
-            foreach (int card in bestHand)
-                Label2.Text = Label2.Text + " " + card.ToString();
-
-            Label3.Text = Compute.CountPoints(bestHand).ToString();
+            
         }
 
     }

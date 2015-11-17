@@ -1,0 +1,33 @@
+﻿html, body
+{
+    height:100%;
+    width:100%;
+    overflow:hidden;
+    margin:0px;
+    padding:0px;
+}
+#form1
+{
+    background:url("/Images/Start_screen.bmp") no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover; 
+    background-size: 100% 100%;
+    height: 1024px;
+    width:1536px;
+}
+#Welcome
+{
+    position:relative;
+    color:white;
+    font-size:45pt;
+}
+#login_link
+{
+    position:relative;
+    color: white;
+    font-size:20pt;
+    top: 45px;
+    left: 3px;
+}

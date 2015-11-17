@@ -66,7 +66,68 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="CSS\Default_Stylesheet.css" />
+    <Content Include="CSS\GameBoard.css" />
     <Content Include="Default.aspx" />
+    <Content Include="GameBoard.aspx" />
+    <Content Include="Images\Cards\10c.png" />
+    <Content Include="Images\Cards\10d.png" />
+    <Content Include="Images\Cards\10h.png" />
+    <Content Include="Images\Cards\10s.png" />
+    <Content Include="Images\Cards\11c.png" />
+    <Content Include="Images\Cards\11d.png" />
+    <Content Include="Images\Cards\11h.png" />
+    <Content Include="Images\Cards\11s.png" />
+    <Content Include="Images\Cards\12c.png" />
+    <Content Include="Images\Cards\12d.png" />
+    <Content Include="Images\Cards\12h.png" />
+    <Content Include="Images\Cards\12s.png" />
+    <Content Include="Images\Cards\13c.png" />
+    <Content Include="Images\Cards\13d.png" />
+    <Content Include="Images\Cards\13h.png" />
+    <Content Include="Images\Cards\13s.png" />
+    <Content Include="Images\Cards\1c.png" />
+    <Content Include="Images\Cards\1d.png" />
+    <Content Include="Images\Cards\1h.png" />
+    <Content Include="Images\Cards\1s.png" />
+    <Content Include="Images\Cards\2c.png" />
+    <Content Include="Images\Cards\2d.png" />
+    <Content Include="Images\Cards\2h.png" />
+    <Content Include="Images\Cards\2s.png" />
+    <Content Include="Images\Cards\3c.png" />
+    <Content Include="Images\Cards\3d.png" />
+    <Content Include="Images\Cards\3h.png" />
+    <Content Include="Images\Cards\3s.png" />
+    <Content Include="Images\Cards\4c.png" />
+    <Content Include="Images\Cards\4d.png" />
+    <Content Include="Images\Cards\4h.png" />
+    <Content Include="Images\Cards\4s.png" />
+    <Content Include="Images\Cards\53.png" />
+    <Content Include="Images\Cards\54.png" />
+    <Content Include="Images\Cards\5c.png" />
+    <Content Include="Images\Cards\5d.png" />
+    <Content Include="Images\Cards\5h.png" />
+    <Content Include="Images\Cards\5s.png" />
+    <Content Include="Images\Cards\6c.png" />
+    <Content Include="Images\Cards\6d.png" />
+    <Content Include="Images\Cards\6h.png" />
+    <Content Include="Images\Cards\6s.png" />
+    <Content Include="Images\Cards\7c.png" />
+    <Content Include="Images\Cards\7d.png" />
+    <Content Include="Images\Cards\7h.png" />
+    <Content Include="Images\Cards\7s.png" />
+    <Content Include="Images\Cards\8c.png" />
+    <Content Include="Images\Cards\8d.png" />
+    <Content Include="Images\Cards\8h.png" />
+    <Content Include="Images\Cards\8s.png" />
+    <Content Include="Images\Cards\9c.png" />
+    <Content Include="Images\Cards\9d.png" />
+    <Content Include="Images\Cards\9h.png" />
+    <Content Include="Images\Cards\9s.png" />
+    <Content Include="Images\cribbage_board.jpg" />
+    <Content Include="Images\Felt.png" />
+    <Content Include="Images\start.jpg" />
+    <Content Include="Images\Start_screen.bmp" />
     <Content Include="packages.config" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -86,10 +147,19 @@
     <Compile Include="Default.aspx.designer.cs">
       <DependentUpon>Default.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Classes\PointCounter.cs" />
+    <Compile Include="Classes\Computation.cs" />
+    <Compile Include="GameBoard.aspx.cs">
+      <DependentUpon>GameBoard.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="GameBoard.aspx.designer.cs">
+      <DependentUpon>GameBoard.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Images\Card_Backs\" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
