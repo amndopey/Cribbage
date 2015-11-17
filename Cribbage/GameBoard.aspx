@@ -10,7 +10,7 @@
 <body>
     <form id="form1" runat="server">
         <div id="Cribbage_BoardDiv" runat="server">
-            <img src="Images/cribbage_board.jpg" />
+            <asp:PlaceHolder ID="Cribbage_Board" runat="server"></asp:PlaceHolder>
         </div>
         <div id="PlayerCard1Div" runat="server">
             <asp:PlaceHolder ID="PlayerCard1" runat="server"></asp:PlaceHolder>

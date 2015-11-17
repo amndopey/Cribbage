@@ -5,6 +5,8 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using Cribbage.Computation;
+using System.Drawing;
+using System.IO;
 
 namespace Cribbage
 {
@@ -45,6 +47,29 @@ namespace Cribbage
             ImageButton img6 = new ImageButton();
             img6.ImageUrl = card6;
             this.PlayerCard6.Controls.Add(img6);
+
+            Bitmap bmp = new Bitmap(Server.MapPath(@"images/cribbage_board.jpg"));
+            Graphics g = Graphics.FromImage(bmp);
+            g.FillEllipse(Brushes.Red, 36, 34, 10, 10);
+            Session.Add("Board", bmp);
+
+            System.Web.UI.WebControls.Image board = new System.Web.UI.WebControls.Image();
+            using (MemoryStream ms = new MemoryStream())
+            {
+
+                bmp.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+
+                byte[] byteImage = ms.ToArray();
+
+
+
+                Convert.ToBase64String(byteImage);
+
+                board.ImageUrl = "data:image/png;base64," + Convert.ToBase64String(byteImage);
+
+            }
+
+            Cribbage_Board.Controls.Add(board);
         }
     }
 }

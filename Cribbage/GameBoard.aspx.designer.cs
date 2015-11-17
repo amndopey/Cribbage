@@ -31,6 +31,15 @@ namespace Cribbage {
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl Cribbage_BoardDiv;
         
         /// <summary>
+        /// Cribbage_Board control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.PlaceHolder Cribbage_Board;
+        
+        /// <summary>
         /// PlayerCard1Div control.
         /// </summary>
         /// <remarks>
