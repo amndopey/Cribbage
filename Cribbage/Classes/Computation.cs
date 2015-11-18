@@ -123,26 +123,22 @@ namespace Cribbage.Classes
             List<int> hand = new List<int>();
             Random rng = new Random();
 
-            for (int i = 0; i < 6; i++)
+            do
             {
-                hand.Add(rng.Next(1, 13));
-            }
+                int card = new int();
 
+                //Get card number
+                card = rng.Next(1, 13);
+                //Get card suit
+                card += (rng.Next(1, 4)) * 100;
+
+                if (!hand.Contains(card))
+                {
+                    hand.Add(card);
+                }
+            } while (hand.Count() < 13);
+            
             return hand;
-        }
-
-        static public string GetSuit(int suitInt)
-        {
-            if (suitInt == 1)
-               return "C";
-            if (suitInt == 2)
-                return "D";
-            if (suitInt == 3)
-                return "H";
-            if (suitInt == 4)
-                return "S";
-
-            throw new ArgumentOutOfRangeException();
         }
     }
 }

@@ -12,6 +12,9 @@
         <div id="Cribbage_BoardDiv" runat="server">
             <asp:PlaceHolder ID="Cribbage_Board" runat="server"></asp:PlaceHolder>
         </div>
+        <div id="DealButtonDiv" runat="server">
+            <asp:Button ID="DealButton" runat="server" Text="Deal!" Width="99px" OnClick="DealButton_Click" />
+        </div>
         <div id="PlayerCard1Div" runat="server">
             <asp:PlaceHolder ID="PlayerCard1" runat="server"></asp:PlaceHolder>
         </div>

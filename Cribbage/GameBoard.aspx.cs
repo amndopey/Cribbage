@@ -7,6 +7,7 @@ using System.Web.UI.WebControls;
 using Cribbage.Classes;
 using System.Drawing;
 using System.IO;
+using System.Reflection;
 
 namespace Cribbage
 {
@@ -14,50 +15,66 @@ namespace Cribbage
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            Random rng = new Random();
+            BoardStatus boardStatus = (BoardStatus)Session["BoardStatus"];
+            if (boardStatus == null)
+            {
+                boardStatus = new BoardStatus();
+                boardStatus.P1Color = Brushes.Red;
+                boardStatus.P1FirstPeg = 0;
+                boardStatus.P1SecondPeg = 1;
+                boardStatus.P2Color = Brushes.Blue;
+                boardStatus.P2FirstPeg = 0;
+                boardStatus.P2SecondPeg = 1;
 
-            string card1 = "images/Cards/" + rng.Next(1, 13).ToString() + Compute.GetSuit(rng.Next(1, 4)) + ".png";
-            string card2 = "images/Cards/" + rng.Next(1, 13).ToString() + Compute.GetSuit(rng.Next(1, 4)) + ".png";
-            string card3 = "images/Cards/" + rng.Next(1, 13).ToString() + Compute.GetSuit(rng.Next(1, 4)) + ".png";
-            string card4 = "images/Cards/" + rng.Next(1, 13).ToString() + Compute.GetSuit(rng.Next(1, 4)) + ".png";
-            string card5 = "images/Cards/" + rng.Next(1, 13).ToString() + Compute.GetSuit(rng.Next(1, 4)) + ".png";
-            string card6 = "images/Cards/" + rng.Next(1, 13).ToString() + Compute.GetSuit(rng.Next(1, 4)) + ".png";
+                Session["BoardStatus"] = boardStatus;
 
+                Cribbage_Board.Controls.Add(RenderBoard.UpdateBoard(boardStatus));
+            }
+            else
+            {
+                Cribbage_Board.Controls.Add(RenderBoard.UpdateBoard(boardStatus));
+            }
+            
+            if (!IsPostBack)
+            {
 
-            ImageButton img = new ImageButton();
-            img.ImageUrl = card1;
-            this.PlayerCard1.Controls.Add(img);
+            }
+            else
+            {
+                if (Session["Crib"] == null)
+                {
+                    int[] hand = (int[])Session["Hand"];
 
-            ImageButton img2 = new ImageButton();
-            img2.ImageUrl = card2;
-            this.PlayerCard2.Controls.Add(img2);
+                    //TODO: Verify hand comes back
 
-            ImageButton img3 = new ImageButton();
-            img3.ImageUrl = card3;
-            this.PlayerCard3.Controls.Add(img3);
+                    foreach (int card in hand)
+                    {
+                        int index = hand.ToList().IndexOf(card);
+                        if (index < 7)
+                        {
+                            string fileString = "images/Cards/" + card.ToString() + ".png";
+                        }
+                        else
+                        {
+                            string fileString = "images/Cards"
+                        }
+                        ImageButton img = new ImageButton();
+                        img.ImageUrl = fileString;
 
-            ImageButton img4 = new ImageButton();
-            img4.ImageUrl = card4;
-            this.PlayerCard4.Controls.Add(img4);
+                        var control = this.FindControl("PlayerCard" + index.ToString());
+                        control.Controls.Add(img);
+                    }
+                }
 
-            ImageButton img5 = new ImageButton();
-            img5.ImageUrl = card5;
-            this.PlayerCard5.Controls.Add(img5);
+            }
 
-            ImageButton img6 = new ImageButton();
-            img6.ImageUrl = card6;
-            this.PlayerCard6.Controls.Add(img6);
+        }
 
-            BoardStatus boardStatus = new BoardStatus();
-            boardStatus.P1Color = Brushes.Red;
-            boardStatus.P1FirstPeg = 34;
-            boardStatus.P1SecondPeg = 36;
-            boardStatus.P2Color = Brushes.Blue;
-            boardStatus.P2FirstPeg = 34;
-            boardStatus.P2SecondPeg = 36;
+        protected void DealButton_Click(object sender, EventArgs e)
+        {
+            DealButtonDiv.Visible = false;
 
-
-            Cribbage_Board.Controls.Add(RenderBoard.UpdateBoard(boardStatus));
+            Session["Hand"] = Compute.DealHand();
         }
     }
 }

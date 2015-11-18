@@ -165,6 +165,30 @@ namespace Cribbage.Classes
                                     coords[1] = 34;
                                     break;
                                 }
+                            case 37:
+                                {
+                                    coords[0] = 548;
+                                    coords[1] = 37;
+                                    break;
+                                }
+                            case 38:
+                                {
+                                    coords[0] = 556;
+                                    coords[1] = 46;
+                                    break;
+                                }
+                            case 39:
+                                {
+                                    coords[0] = 561;
+                                    coords[1] = 57;
+                                    break;
+                                }
+                            case 40:
+                                {
+                                    coords[0] = 558;
+                                    coords[1] = 68;
+                                    break;
+                                }
                             
                             
                             
