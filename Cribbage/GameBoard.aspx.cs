@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using Cribbage.Computation;
+using Cribbage.Classes;
 using System.Drawing;
 using System.IO;
 
@@ -48,28 +48,16 @@ namespace Cribbage
             img6.ImageUrl = card6;
             this.PlayerCard6.Controls.Add(img6);
 
-            Bitmap bmp = new Bitmap(Server.MapPath(@"images/cribbage_board.jpg"));
-            Graphics g = Graphics.FromImage(bmp);
-            g.FillEllipse(Brushes.Red, 36, 34, 10, 10);
-            Session.Add("Board", bmp);
-
-            System.Web.UI.WebControls.Image board = new System.Web.UI.WebControls.Image();
-            using (MemoryStream ms = new MemoryStream())
-            {
-
-                bmp.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
-
-                byte[] byteImage = ms.ToArray();
+            BoardStatus boardStatus = new BoardStatus();
+            boardStatus.P1Color = Brushes.Red;
+            boardStatus.P1FirstPeg = 34;
+            boardStatus.P1SecondPeg = 36;
+            boardStatus.P2Color = Brushes.Blue;
+            boardStatus.P2FirstPeg = 34;
+            boardStatus.P2SecondPeg = 36;
 
 
-
-                Convert.ToBase64String(byteImage);
-
-                board.ImageUrl = "data:image/png;base64," + Convert.ToBase64String(byteImage);
-
-            }
-
-            Cribbage_Board.Controls.Add(board);
+            Cribbage_Board.Controls.Add(RenderBoard.UpdateBoard(boardStatus));
         }
     }
 }
