@@ -73,7 +73,7 @@ namespace Cribbage {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.PlaceHolder PlayerCard1;
+        protected global::System.Web.UI.WebControls.ImageButton PlayerCard1;
         
         /// <summary>
         /// PlayerCard2Div control.
@@ -91,7 +91,7 @@ namespace Cribbage {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.PlaceHolder PlayerCard2;
+        protected global::System.Web.UI.WebControls.ImageButton PlayerCard2;
         
         /// <summary>
         /// PlayerCard3Div control.
@@ -109,7 +109,7 @@ namespace Cribbage {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.PlaceHolder PlayerCard3;
+        protected global::System.Web.UI.WebControls.ImageButton PlayerCard3;
         
         /// <summary>
         /// PlayerCard4Div control.
@@ -127,7 +127,7 @@ namespace Cribbage {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.PlaceHolder PlayerCard4;
+        protected global::System.Web.UI.WebControls.ImageButton PlayerCard4;
         
         /// <summary>
         /// PlayerCard5Div control.
@@ -145,7 +145,7 @@ namespace Cribbage {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.PlaceHolder PlayerCard5;
+        protected global::System.Web.UI.WebControls.ImageButton PlayerCard5;
         
         /// <summary>
         /// PlayerCard6Div control.
@@ -163,6 +163,132 @@ namespace Cribbage {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.PlaceHolder PlayerCard6;
+        protected global::System.Web.UI.WebControls.ImageButton PlayerCard6;
+        
+        /// <summary>
+        /// PlayerCard7Div control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl PlayerCard7Div;
+        
+        /// <summary>
+        /// PlayerCard7 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.ImageButton PlayerCard7;
+        
+        /// <summary>
+        /// PlayerCard8Div control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl PlayerCard8Div;
+        
+        /// <summary>
+        /// PlayerCard8 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.ImageButton PlayerCard8;
+        
+        /// <summary>
+        /// PlayerCard9Div control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl PlayerCard9Div;
+        
+        /// <summary>
+        /// PlayerCard9 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.ImageButton PlayerCard9;
+        
+        /// <summary>
+        /// PlayerCard10Div control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl PlayerCard10Div;
+        
+        /// <summary>
+        /// PlayerCard10 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.ImageButton PlayerCard10;
+        
+        /// <summary>
+        /// PlayerCard11Div control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl PlayerCard11Div;
+        
+        /// <summary>
+        /// PlayerCard11 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.ImageButton PlayerCard11;
+        
+        /// <summary>
+        /// PlayerCard12Div control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl PlayerCard12Div;
+        
+        /// <summary>
+        /// PlayerCard12 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.ImageButton PlayerCard12;
+        
+        /// <summary>
+        /// PlayerCard13Div control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl PlayerCard13Div;
+        
+        /// <summary>
+        /// PlayerCard13 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.ImageButton PlayerCard13;
     }
 }

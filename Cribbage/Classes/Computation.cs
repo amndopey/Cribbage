@@ -34,6 +34,8 @@ namespace Cribbage.Classes
             int points = 0;
             int numCards = 0;
             int runPoints = 0;
+            List<int> originalHand = new List<int>(cardList);
+            cardList = StripSuit(cardList);
 
             produceList(cardList).ForEach(item =>
             {
@@ -139,6 +141,25 @@ namespace Cribbage.Classes
             } while (hand.Count() < 13);
             
             return hand;
+        }
+
+        static public List<int> StripSuit(List<int> hand)
+        {
+            List<int> returnHand = new List<int>();
+            
+            foreach (int card in hand)
+            {
+                if (card > 100 && card < 199)
+                    returnHand.Add(card - 100);
+                if (card > 200 && card < 299)
+                    returnHand.Add(card - 200);
+                if (card > 300 && card < 399)
+                    returnHand.Add(card - 300);
+                if (card > 400 && card < 499)
+                    returnHand.Add(card - 400);
+            }
+
+            return returnHand;
         }
     }
 }

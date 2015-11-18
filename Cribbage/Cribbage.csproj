@@ -124,6 +124,12 @@
     <Content Include="Images\Cards\209.png" />
     <Content Include="Images\Cards\309.png" />
     <Content Include="Images\Cards\409.png" />
+    <Content Include="Images\Card_Backs\b1fv.png" />
+    <Content Include="Images\Card_Backs\b1pl.png" />
+    <Content Include="Images\Card_Backs\b1pr.png" />
+    <Content Include="Images\Card_Backs\b2fv.png" />
+    <Content Include="Images\Card_Backs\b2pl.png" />
+    <Content Include="Images\Card_Backs\b2pr.png" />
     <Content Include="Images\cribbage_board.jpg" />
     <Content Include="Images\Felt.png" />
     <Content Include="Images\start.jpg" />
@@ -159,9 +165,7 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Images\Card_Backs\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
