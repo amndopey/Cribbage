@@ -54,7 +54,12 @@
         <div id="PlayerCard13Div" runat="server">
             <asp:ImageButton ID="PlayerCard13" runat="server" Enabled="false" />
         </div>
-
+        <div id="CribDiv" runat="server">
+            <asp:Image ID="CribCard1" runat="server" CssClass="CardBacks" />
+            <asp:Image ID="CribCard2" runat="server" CssClass="CardBacks" />
+            <asp:Image ID="CribCard3" runat="server" CssClass="CardBacks" />
+            <asp:Image ID="CribCard4" runat="server" CssClass="CardBacks" />
+        </div>
 
     </form>
 </body>

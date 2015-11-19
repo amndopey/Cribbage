@@ -135,3 +135,23 @@
     height: 96px;
     width: 72px;
 }
+#CribDiv
+{
+    position:absolute;
+    top: 200px;
+    left: 1000px;
+    height: 96px;
+    width:150px;
+    margin: 0px;
+    padding: 0px;
+}
+.CardBacks
+{
+    margin: -3px;
+    padding: 0px;
+}
+.ShadedCards
+{
+    filter:alpha(opacity=50);
+    opacity:0.5
+}
