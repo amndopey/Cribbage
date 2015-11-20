@@ -9,6 +9,10 @@
 </head>
 <body>
     <form id="form1" runat="server">
+        <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
+        <div style="display:none;" id="ReloadDiv" runat="server">
+            <asp:Button ID="ReloadButton" runat="server" OnClick="ReloadButton_Click" ClientIDMode="Static" />
+        </div>
         <div id="Cribbage_BoardDiv" runat="server">
             <asp:PlaceHolder ID="Cribbage_Board" runat="server"></asp:PlaceHolder>
         </div>
@@ -60,7 +64,29 @@
             <asp:Image ID="CribCard3" runat="server" CssClass="CardBacks" />
             <asp:Image ID="CribCard4" runat="server" CssClass="CardBacks" />
         </div>
+        <div id="CounterDiv" runat="server" visible="false">
+            Counter:
+            <br />
+            <h1 id="CounterHeader" style="font-size:4em;">
+                <asp:Label ID="CounterLabel" runat="server" Text="0"></asp:Label>
+            </h1>  
+        </div>
+        <div id="CribGoDiv" runat="server" visible="false">
+            <h1 id="CribGoHeader" runat="server" style="font-size:2em;">Go</h1>
+        </div>
 
     </form>
+
+    <script type='text/javascript'>
+        function ComputerTurn(id) {
+            var refreshFunction = document.getElementById('ReloadButton').click();
+            clearInterval(myVar)
+            //refreshFunction();
+            return false;
+        }
+
+        //var intervalId = setInterval('RefreshResults()', 5000);
+    </script>
+
 </body>
 </html>

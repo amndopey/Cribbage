@@ -161,5 +161,39 @@ namespace Cribbage.Classes
 
             return returnHand;
         }
+
+        static public int StripSuit(int card)
+        {
+            if (card > 100 && card < 199)
+                return (card - 100);
+            if (card > 200 && card < 299)
+                return (card - 200);
+            if (card > 300 && card < 399)
+                return (card - 300);
+            if (card > 400 && card < 499)
+                return (card - 400);
+
+            throw new ArgumentOutOfRangeException();
+        }
+
+        static public BoardStatus AddPointsToBoard(BoardStatus boardStatus, int player, int points)
+        {
+            if (player == 1)
+            {
+                if (boardStatus.P1FirstPeg > boardStatus.P1SecondPeg)
+                    boardStatus.P1SecondPeg = boardStatus.P1FirstPeg + points;
+                else
+                    boardStatus.P1FirstPeg = boardStatus.P1SecondPeg + points;
+            }
+            else
+            {
+                if (boardStatus.P2FirstPeg > boardStatus.P2SecondPeg)
+                    boardStatus.P2SecondPeg = boardStatus.P2FirstPeg + points;
+                else
+                    boardStatus.P2FirstPeg = boardStatus.P2SecondPeg + points;
+            }
+
+            return boardStatus;
+        }
     }
 }

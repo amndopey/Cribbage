@@ -145,6 +145,26 @@
     margin: 0px;
     padding: 0px;
 }
+#CounterDiv
+{
+    position:absolute;
+    top:250px;
+    left:50px;
+    height:150px;
+    width:150px;
+    text-align:center;
+    color:white;
+}
+#CribGoDiv
+{
+    position:absolute;
+    top:400px;
+    left:50px;
+    height:60px;
+    width:60px;
+    text-align:center;
+    color:white;
+}
 .CardBacks
 {
     margin: -3px;
