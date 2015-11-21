@@ -49,6 +49,24 @@ namespace Cribbage {
         protected global::System.Web.UI.WebControls.Button ReloadButton;
         
         /// <summary>
+        /// ComputerLastCardButton control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button ComputerLastCardButton;
+        
+        /// <summary>
+        /// FinalCountButton control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button FinalCountButton;
+        
+        /// <summary>
         /// Cribbage_BoardDiv control.
         /// </summary>
         /// <remarks>
@@ -398,5 +416,41 @@ namespace Cribbage {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl CribGoHeader;
+        
+        /// <summary>
+        /// LastCardDiv control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl LastCardDiv;
+        
+        /// <summary>
+        /// LastCardButton control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button LastCardButton;
+        
+        /// <summary>
+        /// ScoreboardDiv control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl ScoreboardDiv;
+        
+        /// <summary>
+        /// Scoreboard control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.ListBox Scoreboard;
     }
 }

@@ -26,8 +26,8 @@
 #DealButtonDiv
 {
     position:absolute;
-    top: 600px;
-    left: 200px;
+    top: 104px;
+    left: 96px;
     width: 101px;
 }
 #PlayerCard1Div
@@ -164,6 +164,21 @@
     width:60px;
     text-align:center;
     color:white;
+}
+#LastCardDiv
+{
+    position:absolute;
+    top:600px;
+    left: 1000px;
+    width:101px;
+}
+#ScoreboardDiv
+{
+    position:absolute;
+    top:550px;
+    left:60px;
+    width: 237px;
+    height: 137px;
 }
 .CardBacks
 {
