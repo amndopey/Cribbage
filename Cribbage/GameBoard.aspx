@@ -12,7 +12,7 @@
         <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
         <div style="display:none;" id="ReloadDiv" runat="server">
             <asp:Button ID="ReloadButton" runat="server" OnClick="ReloadButton_Click" ClientIDMode="Static" />
-            <asp:Button ID="ComputerLastCardButton" runat="server" OnClick="ComputerLastCardButton_Click" ClientIDMode="Static" />
+<%--            <asp:Button ID="ComputerLastCardButton" runat="server" OnClick="ComputerLastCardButton_Click" ClientIDMode="Static" />--%>
             <asp:Button ID="FinalCountButton" runat="server" OnClick="FinalCountButton_Click" ClientIDMode="Static" />
 
         </div>
@@ -77,9 +77,9 @@
         <div id="CribGoDiv" runat="server" visible="false">
             <h1 id="CribGoHeader" runat="server" style="font-size:2em;">Go</h1>
         </div>
-        <div id="LastCardDiv" runat="server" visible ="false">
+<%--        <div id="LastCardDiv" runat="server" visible ="false">
             <asp:Button ID="LastCardButton" runat="server" Text="Go" Width="99px" OnClick="LastCardButton_Click" />
-        </div>
+        </div>--%>
         <div id="ScoreboardDiv" runat="server">
             <asp:ListBox ID="Scoreboard" runat="server" Height="134px" Width="232px"></asp:ListBox>
         </div>
@@ -94,12 +94,12 @@
             return false;
         }
 
-        function ComputerLastCard(id) {
-            var refreshFunction = document.getElementById('ComputerLastCardButton').click();
-            clearInterval(myVar)
-            //refreshFunction();
-            return false;
-        }
+        //function ComputerLastCard(id) {
+        //    var refreshFunction = document.getElementById('ComputerLastCardButton').click();
+        //    clearInterval(myVar)
+        //    //refreshFunction();
+        //    return false;
+        //}
 
         function FinalCount(id) {
             var refreshFunction = document.getElementById('FinalCountButton').click();

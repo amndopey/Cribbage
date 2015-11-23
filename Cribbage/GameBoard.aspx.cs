@@ -154,22 +154,23 @@ namespace Cribbage
                 int cardValue = Compute.StripSuit(hand[Int32.Parse(e.CommandName) - 1]);
 
                 //Pull played cards and add to list
-                List<int> played = (List<int>)Session["Played"] ?? new List<int>();
+                List<int> played = Compute.RetrieveOrder((List<string>)Session["Played"] ?? new List<string>());
                 played.Add(Int32.Parse(e.CommandName) - 1);
-                Session["Played"] = played;
+                List<string> storeIt = Compute.StoreOrder(played);
+
+                Session["Played"] = storeIt;
 
                 //Add to counter
                 if (cardValue > 10)
                     cardValue = 10;
                 CounterLabel.Text = (Int32.Parse(CounterLabel.Text) + cardValue).ToString();
 
-                if (LastCard(2))
-                {
-                    played.Add(99);
-                    Session["Played"] = played;
-                }
+                ComputePoints(FindLastPlayer(played));
 
-                ComputePoints(1);
+                if (LastCard(2) && !LastCard(1))
+                {
+                    return;
+                }
 
                 if (CounterLabel.Text != "0")
                     ScriptManager.RegisterStartupScript(this, GetType(), "Reload", "myVar = setInterval('ComputerTurn()', 3000)", true);
@@ -177,7 +178,7 @@ namespace Cribbage
                 if (AllDone(1))
                 {
                     if (AllDone(2))
-                        throw new NotImplementedException();
+                        ScriptManager.RegisterStartupScript(this, GetType(), "Reload", "myVar = setInterval('FinalCount()', 3000)", true);
                     else
                         ScriptManager.RegisterStartupScript(this, GetType(), "Reload", "myVar = setInterval('ComputerTurn()', 3000)", true);
                 }
@@ -187,13 +188,11 @@ namespace Cribbage
             Session["Crib"] = crib;
         }
 
-        private void ComputerPlay()
+        private List<int> GetComputerHand(List<int> hand)
         {
-            //Get computer hand
-            List<int> hand = (List<int>)Session["Hand"];
             List<int> crib = (List<int>)Session["Crib"];
             List<int> compHand = new List<int>();
-
+            
             for (int i = 6; i <= 11; i++)
             {
                 dynamic control = this.FindControl("PlayerCard" + (i + 1).ToString());
@@ -202,18 +201,42 @@ namespace Cribbage
                     compHand.Add(i);
             }
 
-            if (LastCard(2))
+            return compHand;
+        }
+
+        private int FindLastPlayer(List<int> played)
+        {
+            foreach (int card in played)
             {
-                List<int> played = (List<int>)Session["Played"] ?? new List<int>();
-                played.Add(99);
-                Session["Played"] = played;
-
-                ComputePoints(1);
-
-                CounterLabel.Text = "0";
-
-                return;
+                if (card <= 5)
+                    return 1;
+                if (card >= 6 && card <= 11)
+                    return 2;
             }
+
+            throw new IndexOutOfRangeException();
+        }
+
+        private void ComputerPlay()
+        {
+            //Get computer hand
+            List<int> hand = (List<int>)Session["Hand"];
+            List<int> crib = (List<int>)Session["Crib"];
+            List<int> played = Compute.RetrieveOrder((List<string>)Session["Played"] ?? new List<string>());
+
+            List<int> compHand = GetComputerHand(hand);
+
+            //if (LastCard(2))
+            //{
+            //    ComputePoints(FindLastPlayer(played));
+
+            //    CounterLabel.Text = "0";
+
+            //    if (FindLastPlayer(played) == 2)
+            //        ScriptManager.RegisterStartupScript(this, GetType(), "Reload", "myVar = setInterval('ComputerTurn()', 3000)", true);
+
+            //    return;
+            //}
 
             int cardToPlay = 0;
             int highestCount = 0;
@@ -250,17 +273,19 @@ namespace Cribbage
                 if (AllDone(1) && AllDone(2))
                     ScriptManager.RegisterStartupScript(this, GetType(), "Reload", "myVar = setInterval('FinalCount()', 3000)", true);
 
-                CribGoDiv.Visible = true;
-
                 if (LastCard(1))
                 {
-                    List<int> played = (List<int>)Session["Played"] ?? new List<int>();
-                    played.Add(99);
-                    Session["Played"] = played;
-
-                    ComputePoints(2);
-
+                    int lastPlayed = FindLastPlayer(played);
+                    ComputePoints(lastPlayed);
                     CounterLabel.Text = "0";
+                    if (lastPlayed == 2)
+                    {
+                        ScriptManager.RegisterStartupScript(this, GetType(), "Reload", "myVar = setInterval('ComputerTurn()', 3000)", true);
+                    }
+                }
+                else
+                {
+                    CribGoDiv.Visible = true;
                 }
                 return;
             }
@@ -271,30 +296,32 @@ namespace Cribbage
                 control.Enabled = false;
                 control.DataBind();
 
-
                 //Add card to played array
-                List<int> played = (List<int>)Session["Played"] ?? new List<int>();
                 played.Add(cardToPlay);
-                Session["Played"] = played;
+                List<string> storeIt = Compute.StoreOrder(played);
+                Session["Played"] = storeIt;
 
                 //Strip suit and tally counter
                 int cardValue = Compute.StripSuit(hand[cardToPlay]);
                 if (cardValue > 10)
                     cardValue = 10;
                 CounterLabel.Text = (Int32.Parse(CounterLabel.Text) + cardValue).ToString();
-                
-                ComputePoints(2);
 
+                if (LastCard(1) && !AllDone(1))
+                    ScriptManager.RegisterStartupScript(this, GetType(), "Reload", "myVar = setInterval('ComputerTurn()', 3000)", true);
+                
+                ComputePoints(FindLastPlayer(played));
+                
                 if (AllDone(1))
                 {
                     if (AllDone(2))
                         ScriptManager.RegisterStartupScript(this, GetType(), "Reload", "myVar = setInterval('FinalCount()', 3000)", true);
-                    LastCardDiv.Visible = false;
-                    ScriptManager.RegisterStartupScript(this, GetType(), "Reload", "myVar = setInterval('ComputerTurn()', 3000)", true);
+                    else
+                    {
+                        //LastCardDiv.Visible = false;
+                        ScriptManager.RegisterStartupScript(this, GetType(), "Reload", "myVar = setInterval('ComputerTurn()', 3000)", true);
+                    }
                 }
-
-                else if (LastCard(1) || CounterLabel.Text == "0")
-                    ScriptManager.RegisterStartupScript(this, GetType(), "Reload", "myVar = setInterval('ComputerTurn()', 3000)", true);
             }
 
 
@@ -305,155 +332,153 @@ namespace Cribbage
             ComputerPlay();
         }
 
-        protected void ComputerLastCardButton_Click(object sender, EventArgs e)
-        {
-            ComputerLastCard();
-        }
+        //protected void ComputerLastCardButton_Click(object sender, EventArgs e)
+        //{
+        //    ComputerLastCard();
+        //}
 
         protected void ComputePoints(int player)
         {
             List<int> hand = (List<int>)Session["Hand"];
-            List<int> played = (List<int>)Session["Played"];
+            List<int> played = Compute.RetrieveOrder((List<string>)Session["Played"] ?? new List<string>());
+            
             int totalPlayed = played.Count();
             int points = 0;
+            int score = Int16.Parse(CounterLabel.Text);
 
-            if (totalPlayed <= 1)
+            int lastCard = 0;
+            int repeat = 1;
+            int sum = 0;
+
+            //played.Reverse();
+            //played = played.AsEnumerable().Reverse().ToList();
+
+            foreach (int index in played)
             {
-                //Do nothing
-            }
-            else
-            {
-                if (Int32.Parse(CounterLabel.Text) == 15)
+                int card = Compute.StripSuit(hand[index]);
+
+                if (card > 10)
                 {
-                    points = points + 2;
-                    Scoreboard.Items.Add("Player " + player.ToString() + " scored 15 for 2");
-                    Scoreboard.DataBind();
+                    sum += 10;
+                    score -= 10;
                 }
-                    
-                if (Int32.Parse(CounterLabel.Text) == 31)
+                else
                 {
-                    points = points + 2;
-                    CounterLabel.Text = "0";
-                    CribGoDiv.Visible = false;
-                    Scoreboard.Items.Add("Player " + player.ToString() + " scored 31 for 2");
-                    Scoreboard.DataBind();
-                }
-                else if (played[totalPlayed - 1] == 99)
-                {
-                    points++;
-                    CounterLabel.Text = "0";
-                    CribGoDiv.Visible = false;
-                    Scoreboard.Items.Add("Player " + player.ToString() + " scored 1 for last card");
-                    Scoreboard.DataBind();
+                    sum += card;
+                    score -= card;
                 }
 
-                List<int> modifiedPlayed = new List<int>();
-                for (int i = 0; i < totalPlayed; i++)
+                if (score < 0)
                 {
-                    if (played[i] == 99)
-                        modifiedPlayed = new List<int>();
-                    else
-                        modifiedPlayed.Add(played[i]);
+                    sum -= card;
+                    break;
                 }
 
-                played = modifiedPlayed;
-                totalPlayed = played.Count();
+                if (card == lastCard && repeat != 0)
+                {
+                    repeat++;
+                }
+                else if (repeat > 1)
+                {
+                    switch (repeat)
+                    {
+                        case 2:
+                            {
+                                points = points + 2;
+                                Scoreboard.Items.Add("Player " + player.ToString() + " scored a double for 2");
+                                Scoreboard.DataBind();
+                                break;
+                            }
+                        case 3:
+                            {
+                                points = points + 6;
+                                Scoreboard.Items.Add("Player " + player.ToString() + " scored a triple for 6");
+                                Scoreboard.DataBind();
+                                break;
+                            }
+                        case 4:
+                            {
+                                points = points + 12;
+                                Scoreboard.Items.Add("Player " + player.ToString() + " scored a quadruple for 12");
+                                Scoreboard.DataBind();
+                                break;
+                            }
+                        default:
+                            break;
+                    }
 
-                if (totalPlayed >= 4 )
+                    repeat = 0;
+                }
+                else if (lastCard != 0)
                 {
-                    if (Compute.StripSuit(hand[played[totalPlayed - 1]]) == Compute.StripSuit(hand[played[totalPlayed - 2]]) &&
-                        Compute.StripSuit(hand[played[totalPlayed - 1]]) == Compute.StripSuit(hand[played[totalPlayed - 3]]) &&
-                        Compute.StripSuit(hand[played[totalPlayed - 1]]) == Compute.StripSuit(hand[played[totalPlayed - 4]]))
-                    {
-                        points = points + 12;
-                        Scoreboard.Items.Add("Player " + player.ToString() + " scored 12 for a quadruple");
-                        Scoreboard.DataBind();
-                    }
-                    else if (Compute.StripSuit(hand[played[totalPlayed - 1]]) == Compute.StripSuit(hand[played[totalPlayed - 2]]) &&
-                        Compute.StripSuit(hand[played[totalPlayed - 1]]) == Compute.StripSuit(hand[played[totalPlayed - 3]]))
-                    {
-                        points = points + 6;
-                        Scoreboard.Items.Add("Player " + player.ToString() + " scored 6 for a triple");
-                        Scoreboard.DataBind();
-                    }
-                    else if (Compute.StripSuit(hand[played[totalPlayed - 1]]) == Compute.StripSuit(hand[played[totalPlayed - 2]]))
-                        points = points + 2;
+                    repeat = 0;
+                }
 
-                }
-                else if (totalPlayed == 3)
-                {
-                    if (Compute.StripSuit(hand[played[totalPlayed - 1]]) == Compute.StripSuit(hand[played[totalPlayed - 2]]) &&
-                        Compute.StripSuit(hand[played[totalPlayed - 1]]) == Compute.StripSuit(hand[played[totalPlayed - 3]]))
-                    {
-                        points = points + 6;
-                        Scoreboard.Items.Add("Player " + player.ToString() + " scored 6 for a triple");
-                        Scoreboard.DataBind();
-                    }
-                    else if (Compute.StripSuit(hand[played[totalPlayed - 1]]) == Compute.StripSuit(hand[played[totalPlayed - 2]]))
-                    {
-                        points = points + 2;
-                        Scoreboard.Items.Add("Player " + player.ToString() + " scored 2 for a double");
-                        Scoreboard.DataBind();
-                    }
-                }
-                else if (totalPlayed == 2)
-                {
-                    if (Compute.StripSuit(hand[played[totalPlayed - 1]]) == Compute.StripSuit(hand[played[totalPlayed - 2]]))
-                    {
-                        points = points + 2;
-                        Scoreboard.Items.Add("Player " + player.ToString() + " scored 2 for a double");
-                        Scoreboard.DataBind();
-                    }
-                }
+                lastCard = card;
             }
 
+            if (sum == 15)
+            {
+                points = points + 2;
+                Scoreboard.Items.Add("Player " + player.ToString() + " scored 15 for 2");
+                Scoreboard.DataBind();
+            }
+                
+            else if (sum == 31)
+            {
+                points = points + 2;
+                CounterLabel.Text = "0";
+                CounterLabel.DataBind();
+                CribGoDiv.Visible = false;
+                Scoreboard.Items.Add("Player " + player.ToString() + " scored 31 for 2");
+                Scoreboard.DataBind();
+            }
+            else if (LastCard(1) && LastCard(2))
+            {
+                points++;
+                CribGoDiv.Visible = false;
+                Scoreboard.Items.Add("Player " + player.ToString() + " scored 1 for last card");
+                Scoreboard.DataBind();
+                CounterLabel.Text = "0";
+            }
 
             if (points > 0)
                 Session["BoardStatus"] = Compute.AddPointsToBoard((BoardStatus)Session["BoardStatus"], player, points);
         }
 
-        protected void ComputerLastCard()
-        {
-            List<int> hand = (List<int>)Session["Hand"];
-            List<int> crib = (List<int>)Session["Crib"];
+        //protected void ComputerLastCard()
+        //{
+        //    List<int> hand = (List<int>)Session["Hand"];
+        //    List<int> crib = (List<int>)Session["Crib"];
+        //    List<int> played = (List<int>)Session["Played"];
 
-            //Check for last card
-            bool lastCard = true;
-            for (int i = 6; i <= 11; i++)
-            {
-                dynamic control = this.FindControl("PlayerCard" + (i + 1).ToString());
-                if (((!crib.Contains(i)) && control.ImageUrl == "images/Card_Backs/b1fv.png") && control.Visible == true)
-                {
-                    if (Compute.StripSuit(hand[i]) + Int32.Parse(CounterLabel.Text) <= 31)
-                    {
-                        lastCard = false;
-                        ScriptManager.RegisterStartupScript(this, GetType(), "Reload", "myVar = setInterval('ComputerLastCard()', 3000)", true);
-                        break;
-                    }
-                }
-            }
+        //    //Check for last card
+        //    bool lastCard = true;
+        //    for (int i = 6; i <= 11; i++)
+        //    {
+        //        dynamic control = this.FindControl("PlayerCard" + (i + 1).ToString());
+        //        if (((!crib.Contains(i)) && control.ImageUrl == "images/Card_Backs/b1fv.png") && control.Visible == true)
+        //        {
+        //            if (Compute.StripSuit(hand[i]) + Int32.Parse(CounterLabel.Text) <= 31)
+        //            {
+        //                lastCard = false;
+        //                ScriptManager.RegisterStartupScript(this, GetType(), "Reload", "myVar = setInterval('ComputerLastCard()', 3000)", true);
+        //                break;
+        //            }
+        //        }
+        //    }
 
-            if (lastCard)
-            {
-                List<int> played = (List<int>)Session["Played"];
-                played.Add(99);
-                Session["Played"] = played;
-            }
+        //    ComputePoints(FindLastPlayer(played));
+        //}
 
-            ComputePoints(2);
-        }
+        //protected void LastCardButton_Click(object sender, EventArgs e)
+        //{
+        //    List<int> played = (List<int>)Session["Played"];
+        //    ComputePoints(FindLastPlayer(played));
 
-        protected void LastCardButton_Click(object sender, EventArgs e)
-        {
-            List<int> played = (List<int>)Session["Played"];
-            played.Add(99);
-            Session["Played"] = played;
-
-            CribGoDiv.Visible = false;
-            LastCardDiv.Visible = false;
-
-            ComputePoints(2);
-        }
+        //    CribGoDiv.Visible = false;
+        //    LastCardDiv.Visible = false;
+        //}
 
         protected bool AllDone(int player)
         {
@@ -533,6 +558,8 @@ namespace Cribbage
 
         protected void FinalCountButton_Click(object sender, EventArgs e)
         {
+            throw new NotImplementedException();
+            
             //List<int> hand = (List<int>)Session["Hand"];
             //List<int> crib = (List<int>)Session["Crib"] ?? new List<int>();
             //int playerCrib = (int)Session["PlayerCrib"];

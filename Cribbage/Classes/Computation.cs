@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
+
 
 namespace Cribbage.Classes
 {
@@ -194,6 +196,36 @@ namespace Cribbage.Classes
             }
 
             return boardStatus;
+        }
+
+        static public List<string> StoreOrder(List<int> played)
+        {
+            int myChar = 65;
+            List<string> modifiedList = new List<string>();
+
+            foreach (int index in played)
+            {
+                modifiedList.Add(((char)myChar).ToString() + index.ToString());
+                myChar++;
+            }
+
+            return modifiedList;
+        }
+
+        static public List<int> RetrieveOrder(List<string> played)
+        {
+            List<int> returnedList = new List<int>();
+            
+            foreach (string index in played.OrderBy(x => x).ToList())
+            {
+                Regex myRegex = new Regex(@"[^\d]");
+
+                string match = myRegex.Replace(index, "");
+
+                returnedList.Add(Int16.Parse(match));
+            }
+
+            return returnedList;
         }
     }
 }
