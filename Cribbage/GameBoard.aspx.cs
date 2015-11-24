@@ -167,10 +167,10 @@ namespace Cribbage
 
                 ComputePoints(FindLastPlayer(played));
 
-                if (LastCard(2) && !LastCard(1))
-                {
-                    return;
-                }
+                //if (LastCard(2) && !LastCard(1))
+                //{
+                //    return;
+                //}
 
                 if (CounterLabel.Text != "0")
                     ScriptManager.RegisterStartupScript(this, GetType(), "Reload", "myVar = setInterval('ComputerTurn()', 3000)", true);
@@ -206,6 +206,8 @@ namespace Cribbage
 
         private int FindLastPlayer(List<int> played)
         {
+            played.Reverse();
+            
             foreach (int card in played)
             {
                 if (card <= 5)
@@ -253,10 +255,15 @@ namespace Cribbage
                     cardToPlay = index;
                 }
 
-                if (points == 31)
+                else if (points == 31)
                 {
                     cardToPlay = index;
                     highestCount = 31;
+                }
+                else if (card == played[0])
+                {
+                    cardToPlay = index;
+                    highestCount = 30;
                 }
                 else if (points < 31)
                 {
@@ -350,8 +357,7 @@ namespace Cribbage
             int repeat = 1;
             int sum = 0;
 
-            //played.Reverse();
-            //played = played.AsEnumerable().Reverse().ToList();
+            played.Reverse();
 
             foreach (int index in played)
             {
@@ -374,11 +380,12 @@ namespace Cribbage
                     break;
                 }
 
-                if (card == lastCard && repeat != 0)
+                if ((card == lastCard && repeat != 0))
                 {
                     repeat++;
                 }
-                else if (repeat > 1)
+                
+                if ((LastCard(1) && LastCard(2)) || (card != lastCard && lastCard != 0 && repeat > 1))
                 {
                     switch (repeat)
                     {
@@ -406,10 +413,9 @@ namespace Cribbage
                         default:
                             break;
                     }
-
-                    repeat = 0;
                 }
-                else if (lastCard != 0)
+                
+                if (lastCard != 0 && lastCard != card)
                 {
                     repeat = 0;
                 }
@@ -433,7 +439,7 @@ namespace Cribbage
                 Scoreboard.Items.Add("Player " + player.ToString() + " scored 31 for 2");
                 Scoreboard.DataBind();
             }
-            else if (LastCard(1) && LastCard(2))
+            if (LastCard(1) && LastCard(2))
             {
                 points++;
                 CribGoDiv.Visible = false;
@@ -539,7 +545,7 @@ namespace Cribbage
                 for (int i = 6; i <= 11; i++)
                 {
                     dynamic control = this.FindControl("PlayerCard" + (i + 1).ToString());
-                    if (control.Visible == true && control.ImageUrl != "images/Card_Backs/b1fv.png")
+                    if (control.Visible == true && control.ImageUrl == "images/Card_Backs/b1fv.png")
                     {
                         int card = Compute.StripSuit(hand[i]);
                         if (card > 10)
@@ -558,7 +564,7 @@ namespace Cribbage
 
         protected void FinalCountButton_Click(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
             
             //List<int> hand = (List<int>)Session["Hand"];
             //List<int> crib = (List<int>)Session["Crib"] ?? new List<int>();
