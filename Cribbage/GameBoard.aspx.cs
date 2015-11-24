@@ -28,6 +28,7 @@ namespace Cribbage
 
                 Session["BoardStatus"] = boardStatus;
                 Session["PlayerCrib"] = 1;
+                Session["PlayerCount"] = 2;
 
                 Cribbage_Board.Controls.Add(RenderBoard.UpdateBoard(boardStatus));
             }
@@ -35,17 +36,19 @@ namespace Cribbage
             {
                 Cribbage_Board.Controls.Add(RenderBoard.UpdateBoard(boardStatus));
             }
+
+            Scoreboard.SelectedIndex = Scoreboard.Items.Count - 1;
         }
         
         protected void Page_Load(object sender, EventArgs e)
         {
-
-            ScriptManager.GetCurrent(Page).RegisterPostBackControl(ReloadButton);                
+            ScriptManager.GetCurrent(Page).RegisterPostBackControl(ReloadButton);
         }
 
         protected void DealButton_Click(object sender, EventArgs e)
         {
             DealButtonDiv.Visible = false;
+            WhosTurnDiv.Visible = true;
 
             Session["Hand"] = Compute.DealHand();
 
@@ -140,6 +143,10 @@ namespace Cribbage
                 this.CounterDiv.Visible = true;
                 this.CounterLabel.Text = "0";
 
+                if ((int)Session["PlayerCrib"] == 1)
+                {
+                    ScriptManager.RegisterStartupScript(this, GetType(), "Reload", "myVar = setInterval('ComputerTurn()', 3000)", true);
+                }
             }
             else
             {
@@ -260,7 +267,7 @@ namespace Cribbage
                     cardToPlay = index;
                     highestCount = 31;
                 }
-                else if (card == played[0])
+                else if (played.Count() > 0 && card == played[0])
                 {
                     cardToPlay = index;
                     highestCount = 30;
@@ -452,40 +459,6 @@ namespace Cribbage
                 Session["BoardStatus"] = Compute.AddPointsToBoard((BoardStatus)Session["BoardStatus"], player, points);
         }
 
-        //protected void ComputerLastCard()
-        //{
-        //    List<int> hand = (List<int>)Session["Hand"];
-        //    List<int> crib = (List<int>)Session["Crib"];
-        //    List<int> played = (List<int>)Session["Played"];
-
-        //    //Check for last card
-        //    bool lastCard = true;
-        //    for (int i = 6; i <= 11; i++)
-        //    {
-        //        dynamic control = this.FindControl("PlayerCard" + (i + 1).ToString());
-        //        if (((!crib.Contains(i)) && control.ImageUrl == "images/Card_Backs/b1fv.png") && control.Visible == true)
-        //        {
-        //            if (Compute.StripSuit(hand[i]) + Int32.Parse(CounterLabel.Text) <= 31)
-        //            {
-        //                lastCard = false;
-        //                ScriptManager.RegisterStartupScript(this, GetType(), "Reload", "myVar = setInterval('ComputerLastCard()', 3000)", true);
-        //                break;
-        //            }
-        //        }
-        //    }
-
-        //    ComputePoints(FindLastPlayer(played));
-        //}
-
-        //protected void LastCardButton_Click(object sender, EventArgs e)
-        //{
-        //    List<int> played = (List<int>)Session["Played"];
-        //    ComputePoints(FindLastPlayer(played));
-
-        //    CribGoDiv.Visible = false;
-        //    LastCardDiv.Visible = false;
-        //}
-
         protected bool AllDone(int player)
         {
             bool allDone = true;
@@ -564,16 +537,149 @@ namespace Cribbage
 
         protected void FinalCountButton_Click(object sender, EventArgs e)
         {
-            //throw new NotImplementedException();
+            CounterDiv.Visible = false;
+            WhosTurnDiv.Visible = false;
+
+            List<int> hand = (List<int>)Session["Hand"];
+            List<int> crib = (List<int>)Session["Crib"] ?? new List<int>();
+            int playerCrib = (int)Session["PlayerCrib"];
+            int playerCount = (int)Session["PlayerCount"];
+            int points = 0;
+            int beginCount = 0;
+            List<int> countHand = new List<int>();
+
+            if (hand.Count() == 0)
+            {
+                for (int i = 0; i <= 12; i++)
+                {
+                    dynamic control = this.FindControl("PlayerCard" + (i + 1).ToString());
+                    control.ImageUrl = null;
+                    control.Enabled = false;
+                }
+
+                if (playerCrib == 1)
+                    beginCount = 0;
+                else
+                    beginCount = 6;
+
+                for (int i = beginCount; i < (beginCount + 5); i++)
+                {
+                    dynamic control = this.FindControl("PlayerCard" + (i + 1).ToString());
+                    control.ImageUrl = "images/cards/" + crib[(i - beginCount)].ToString() + ".png";
+                    control.CssClass = null;
+                    countHand.Add(crib[i - beginCount]);
+                }
+
+                for (int i = beginCount; i < (beginCount + 4); i++)
+                {
+                    dynamic control2 = this.FindControl("CribCard" + ((i - beginCount) + 1).ToString());
+                    control2.ImageUrl = null;
+                }
+            }
+            else if (playerCount == 1)
+            {
+                beginCount = 0;
+            }
+            else if (playerCount == 2)
+            {
+                beginCount = 6;
+            }
+            else
+                throw new IndexOutOfRangeException();
+
+            if (hand.Count() != 0)
+            {
+                for (int i = beginCount; i < (beginCount + 6); i++)
+                {
+                    dynamic control = this.FindControl("PlayerCard" + (i + 1).ToString());
+                    if (!String.IsNullOrEmpty(control.ImageUrl))
+                    {
+                        countHand.Add(hand[i]);
+                    }
+                }
+
+                countHand.Add(hand[12]);
+            }
+
             
-            //List<int> hand = (List<int>)Session["Hand"];
-            //List<int> crib = (List<int>)Session["Crib"] ?? new List<int>();
-            //int playerCrib = (int)Session["PlayerCrib"];
 
-            //if (crib.Count() == 0)
-            //{
+            points = Compute.CountPoints(countHand);
 
-            //}
+            if (hand.Count() != 0)
+                Scoreboard.Items.Add("Player " + playerCount.ToString() + "'s hand scored " + points.ToString() + " points");
+            else
+                Scoreboard.Items.Add("Player " + playerCount.ToString() + "'s crib scored " + points.ToString() + " points");
+            Scoreboard.DataBind();
+
+            if (points > 0)
+                Session["BoardStatus"] = Compute.AddPointsToBoard((BoardStatus)Session["BoardStatus"], playerCount, points);
+
+            if (playerCount == playerCrib && hand.Count() != 0)
+            {
+                List<int> fullCrib = new List<int>();
+                foreach (int index in crib)
+                {
+                    fullCrib.Add(hand[index]);
+                }
+                fullCrib.Add(hand[12]);
+                Session["Hand"] = new List<int>();
+                Session["Crib"] = fullCrib;
+            }
+            else if (playerCount == 1)
+            {
+                Session["PlayerCount"] = 2;
+            }
+            else if (playerCount == 2)
+            {
+                Session["PlayerCount"] = 1;
+            }
+
+            if (crib.Count() != 5)
+            {
+                ScriptManager.RegisterStartupScript(this, GetType(), "Reload", "myVar = setInterval('FinalCount()', 5000)", true);
+            }
+            else
+            {
+                Session["crib"] = new List<int>();
+                ScriptManager.RegisterStartupScript(this, GetType(), "Reload", "myVar = setInterval('ResetBoard()', 6000)", true);
+                return;
+            }
+
+        }
+
+        protected void ResetPlayArea(object sender, EventArgs e)
+        {
+            Scoreboard.Items.Add("------------------");
+            Scoreboard.DataBind();
+
+            int playerCrib = (int)Session["PlayerCrib"];
+
+
+            if (playerCrib == 1)
+            {
+                Session["PlayerCrib"] = 2;
+                Session["PlayerCount"] = 1;
+            }
+            else
+            {
+                Session["PlayerCrib"] = 1;
+                Session["PlayerCount"] = 2;
+            }
+
+            //Clear out all cards
+            for (int i = 0; i <= 12; i++)
+            {
+                dynamic control = this.FindControl("PlayerCard" + (i + 1).ToString());
+                control.ImageUrl = null;
+                control.CssClass = null;
+                control.Enabled = false;
+            }
+
+            //Hide counter
+            CounterDiv.Visible = false;
+
+            //Enable deal button
+            DealButtonDiv.Visible = true;
         }
     }
 }

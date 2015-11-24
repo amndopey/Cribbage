@@ -180,6 +180,16 @@
     width: 237px;
     height: 137px;
 }
+#WhosTurnDiv
+{
+    position:absolute;
+    top:248px;
+    left:234px;
+    text-align:center;
+    height: 87px;
+    width: 106px;
+    color:white;
+}
 .CardBacks
 {
     margin: -3px;

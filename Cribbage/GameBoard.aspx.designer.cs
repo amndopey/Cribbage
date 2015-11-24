@@ -58,6 +58,15 @@ namespace Cribbage {
         protected global::System.Web.UI.WebControls.Button FinalCountButton;
         
         /// <summary>
+        /// ResetBoardButton control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button ResetBoardButton;
+        
+        /// <summary>
         /// Cribbage_BoardDiv control.
         /// </summary>
         /// <remarks>
@@ -407,6 +416,24 @@ namespace Cribbage {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl CribGoHeader;
+        
+        /// <summary>
+        /// WhosTurnDiv control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl WhosTurnDiv;
+        
+        /// <summary>
+        /// WhosTurnLabel control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label WhosTurnLabel;
         
         /// <summary>
         /// ScoreboardDiv control.

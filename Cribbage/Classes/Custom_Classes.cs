@@ -16,9 +16,4 @@ namespace Cribbage.Classes
         public int P2FirstPeg { get; set; }
         public int P2SecondPeg { get; set; }
     }
-
-    public class PlayedOrder
-    {
-        public List<int> played { get; set; }
-    }
 }
