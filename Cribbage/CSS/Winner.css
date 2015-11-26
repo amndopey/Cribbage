@@ -1,0 +1,24 @@
+﻿html, body
+{
+    height:1212px;
+    width:133%;
+    overflow:hidden;
+    margin:0px;
+    padding:0px;
+}
+#form1
+{
+    background:url("/Images/Felt.png") no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover; 
+    background-size: 100% 100%;
+    height: 1200px;
+    width:1920px;
+}
+#Title
+{
+    position:absolute;
+    color:white;
+}

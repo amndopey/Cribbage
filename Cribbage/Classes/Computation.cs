@@ -67,7 +67,7 @@ namespace Cribbage.Classes
                             }
                             else if (run == item.Count())
                             {
-                                runPoints = runPoints + run;
+                                runPoints += + run;
                             }
                         }
 
@@ -79,7 +79,7 @@ namespace Cribbage.Classes
                 //Find all ways to equal 15
                 if (convertedPoints.Sum() == 15)
                 {
-                    points = points + 2;
+                    points += 2;
                 }
             });
 
@@ -90,11 +90,11 @@ namespace Cribbage.Classes
             foreach (var grp in numberGroups)
             {
                 if (grp.Count() == 2)
-                    points = points + 2;
+                    points += 2;
                 else if (grp.Count() == 3)
-                    points = points + 6;
+                    points += 6;
                 else if (grp.Count() == 4)
-                    points = points + 12;
+                    points += 12;
             }
 
             return points;
@@ -183,16 +183,34 @@ namespace Cribbage.Classes
             if (player == 1)
             {
                 if (boardStatus.P1FirstPeg > boardStatus.P1SecondPeg)
-                    boardStatus.P1SecondPeg = boardStatus.P1FirstPeg + points;
+                {
+                    if (boardStatus.P1FirstPeg + points > 122)
+                        boardStatus.P1SecondPeg = 122;
+                    else
+                        boardStatus.P1SecondPeg = boardStatus.P1FirstPeg + points;
+                }
                 else
-                    boardStatus.P1FirstPeg = boardStatus.P1SecondPeg + points;
+                {
+                    if (boardStatus.P1SecondPeg + points > 122)
+                        boardStatus.P1SecondPeg = 122;
+                    else
+                        boardStatus.P1FirstPeg = boardStatus.P1SecondPeg + points;
+                }
             }
             else
             {
                 if (boardStatus.P2FirstPeg > boardStatus.P2SecondPeg)
-                    boardStatus.P2SecondPeg = boardStatus.P2FirstPeg + points;
+                {
+                    if (boardStatus.P2FirstPeg + points > 122)
+                        boardStatus.P2FirstPeg = 122;
+                    else
+                        boardStatus.P2SecondPeg = boardStatus.P2FirstPeg + points;
+                }
                 else
-                    boardStatus.P2FirstPeg = boardStatus.P2SecondPeg + points;
+                    if (boardStatus.P2SecondPeg + points > 122)
+                        boardStatus.P2SecondPeg = 122;
+                    else
+                        boardStatus.P2FirstPeg = boardStatus.P2SecondPeg + points;
             }
 
             return boardStatus;

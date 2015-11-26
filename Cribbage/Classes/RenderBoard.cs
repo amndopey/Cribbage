@@ -189,9 +189,218 @@ namespace Cribbage.Classes
                                     coords[1] = 68;
                                     break;
                                 }
-                            
-                            
-                            
+                            case 41:
+                                {
+                                    coords[0] = 549;
+                                    coords[1] = 75;
+                                    break;
+                                }
+                            case 42:
+                            case 43:
+                            case 44:
+                            case 45:
+                            case 46:
+                                {
+                                    coords[0] = 530 - (12 * (PegLocation - 42));
+                                    coords[1] = 79;
+                                    break;
+                                }
+                            case 47:
+                            case 48:
+                            case 49:
+                            case 50:
+                            case 51:
+                                {
+                                    coords[0] = 523 - (12 * (PegLocation - 42));
+                                    coords[1] = 77;
+                                    break;
+                                }
+                            case 52:
+                            case 53:
+                            case 54:
+                            case 55:
+                            case 56:
+                                {
+                                    coords[0] = 514 - (12 * (PegLocation - 42));
+                                    coords[1] = 77;
+                                    break;
+                                }
+                            case 57:
+                            case 58:
+                            case 59:
+                            case 60:
+                            case 61:
+                                {
+                                    coords[0] = 504 - (12 * (PegLocation - 42));
+                                    coords[1] = 77;
+                                    break;
+                                }
+                            case 62:
+                            case 63:
+                            case 64:
+                            case 65:
+                            case 66:
+                                {
+                                    coords[0] = 494 - (12 * (PegLocation - 42));
+                                    coords[1] = 77;
+                                    break;
+                                }
+                            case 67:
+                            case 68:
+                            case 69:
+                            case 70:
+                            case 71:
+                                {
+                                    coords[0] = 484 - (12 * (PegLocation - 42));
+                                    coords[1] = 77;
+                                    break;
+                                }
+                            case 72:
+                            case 73:
+                            case 74:
+                            case 75:
+                            case 76:
+                                {
+                                    coords[0] = 474 - (12 * (PegLocation - 42));
+                                    coords[1] = 77;
+                                    break;
+                                }
+                            case 77:
+                                {
+                                    coords[0] = 47;
+                                    coords[1] = 80;
+                                    break;
+                                }
+                            case 78:
+                                {
+                                    coords[0] = 37;
+                                    coords[1] = 88;
+                                    break;
+                                }
+                            case 79:
+                                {
+                                    coords[0] = 34;
+                                    coords[1] = 100;
+                                    break;
+                                }
+                            case 80:
+                                {
+                                    coords[0] = 37;
+                                    coords[1] = 110;
+                                    break;
+                                }
+                            case 81:
+                                {
+                                    coords[0] = 47;
+                                    coords[1] = 118;
+                                    break;
+                                }
+                            case 82:
+                            case 83:
+                            case 84:
+                            case 85:
+                            case 86:
+                                {
+                                    coords[0] = 68 + (12 * (PegLocation - 82));
+                                    coords[1] = 122;
+                                    break;
+                                }
+                            case 87:
+                            case 88:
+                            case 89:
+                            case 90:
+                            case 91:
+                                {
+                                    coords[0] = 137 + (12 * (PegLocation - 87));
+                                    coords[1] = 122;
+                                    break;
+                                }
+                            case 92:
+                            case 93:
+                            case 94:
+                            case 95:
+                            case 96:
+                                {
+                                    coords[0] = 206 + (12 * (PegLocation - 92));
+                                    coords[1] = 122;
+                                    break;
+                                }
+                            case 97:
+                            case 98:
+                            case 99:
+                            case 100:
+                            case 101:
+                                {
+                                    coords[0] = 275 + (12 * (PegLocation - 97));
+                                    coords[1] = 122;
+                                    break;
+                                }
+                            case 102:
+                            case 103:
+                            case 104:
+                            case 105:
+                            case 106:
+                                {
+                                    coords[0] = 346 + (12 * (PegLocation - 102));
+                                    coords[1] = 122;
+                                    break;
+                                }
+                            case 107:
+                            case 108:
+                            case 109:
+                            case 110:
+                            case 111:
+                                {
+                                    coords[0] = 415 + (12 * (PegLocation - 107));
+                                    coords[1] = 122;
+                                    break;
+                                }
+                            case 112:
+                            case 113:
+                            case 114:
+                            case 115:
+                            case 116:
+                                {
+                                    coords[0] = 483 + (12 * (PegLocation - 112));
+                                    coords[1] = 122;
+                                    break;
+                                }
+                            case 117:
+                                {
+                                    coords[0] = 550;
+                                    coords[1] = 124;
+                                    break;
+                                }
+                            case 118:
+                                {
+                                    coords[0] = 559;
+                                    coords[1] = 133;
+                                    break;
+                                }
+                            case 119:
+                                {
+                                    coords[0] = 562;
+                                    coords[1] = 143;
+                                    break;
+                                }
+                            case 120:
+                                {
+                                    coords[0] = 559;
+                                    coords[1] = 154;
+                                    break;
+                                }
+                            case 121:
+                                {
+                                    coords[0] = 550;
+                                    coords[1] = 161;
+                                    break;
+                                }
+                            case 122:
+                                {
+                                    coords[0] = 530;
+                                    coords[1] = 166;
+                                    break;
+                                }
                             default:
                                 throw new ArgumentOutOfRangeException();
                         }
@@ -286,8 +495,242 @@ namespace Cribbage.Classes
                                     coords[1] = 300;
                                     break;
                                 }
-
-                            
+                            case 37:
+                                {
+                                    coords[0] = 550;
+                                    coords[1] = 297;
+                                    break;
+                                }
+                            case 38:
+                                {
+                                    coords[0] = 560;
+                                    coords[1] = 287;
+                                    break;
+                                }
+                            case 39:
+                                {
+                                    coords[0] = 562;
+                                    coords[1] = 277;
+                                    break;
+                                }
+                            case 40:
+                                {
+                                    coords[0] = 559;
+                                    coords[1] = 266;
+                                    break;
+                                }
+                            case 41:
+                                {
+                                    coords[0] = 551;
+                                    coords[1] = 258;
+                                    break;
+                                }
+                            case 42:
+                            case 43:
+                            case 44:
+                            case 45:
+                            case 46:
+                                {
+                                    coords[0] = 530 - (12 * (PegLocation - 42));
+                                    coords[1] = 255;
+                                    break;
+                                }
+                            case 47:
+                            case 48:
+                            case 49:
+                            case 50:
+                            case 51:
+                                {
+                                    coords[0] = 523 - (12 * (PegLocation - 42));
+                                    coords[1] = 255;
+                                    break;
+                                }
+                            case 52:
+                            case 53:
+                            case 54:
+                            case 55:
+                            case 56:
+                                {
+                                    coords[0] = 514 - (12 * (PegLocation - 42));
+                                    coords[1] = 256;
+                                    break;
+                                }
+                            case 57:
+                            case 58:
+                            case 59:
+                            case 60:
+                            case 61:
+                                {
+                                    coords[0] = 504 - (12 * (PegLocation - 42));
+                                    coords[1] = 256;
+                                    break;
+                                }
+                            case 62:
+                            case 63:
+                            case 64:
+                            case 65:
+                            case 66:
+                                {
+                                    coords[0] = 494 - (12 * (PegLocation - 42));
+                                    coords[1] = 256;
+                                    break;
+                                }
+                            case 67:
+                            case 68:
+                            case 69:
+                            case 70:
+                            case 71:
+                                {
+                                    coords[0] = 484 - (12 * (PegLocation - 42));
+                                    coords[1] = 256;
+                                    break;
+                                }
+                            case 72:
+                            case 73:
+                            case 74:
+                            case 75:
+                            case 76:
+                                {
+                                    coords[0] = 474 - (12 * (PegLocation - 42));
+                                    coords[1] = 256;
+                                    break;
+                                }
+                            case 77:
+                                {
+                                    coords[0] = 46;
+                                    coords[1] = 255;
+                                    break;
+                                }
+                            case 78:
+                                {
+                                    coords[0] = 36;
+                                    coords[1] = 246;
+                                    break;
+                                }
+                            case 79:
+                                {
+                                    coords[0] = 33;
+                                    coords[1] = 235;
+                                    break;
+                                }
+                            case 80:
+                                {
+                                    coords[0] = 36;
+                                    coords[1] = 224;
+                                    break;
+                                }
+                            case 81:
+                                {
+                                    coords[0] = 45;
+                                    coords[1] = 215;
+                                    break;
+                                }
+                            case 82:
+                            case 83:
+                            case 84:
+                            case 85:
+                            case 86:
+                                {
+                                    coords[0] = 67 + (12 * (PegLocation - 82));
+                                    coords[1] = 211;
+                                    break;
+                                }
+                            case 87:
+                            case 88:
+                            case 89:
+                            case 90:
+                            case 91:
+                                {
+                                    coords[0] = 135 + (12 * (PegLocation - 87));
+                                    coords[1] = 211;
+                                    break;
+                                }
+                            case 92:
+                            case 93:
+                            case 94:
+                            case 95:
+                            case 96:
+                                {
+                                    coords[0] = 206 + (12 * (PegLocation - 92));
+                                    coords[1] = 211;
+                                    break;
+                                }
+                            case 97:
+                            case 98:
+                            case 99:
+                            case 100:
+                            case 101:
+                                {
+                                    coords[0] = 275 + (12 * (PegLocation - 97));
+                                    coords[1] = 211;
+                                    break;
+                                }
+                            case 102:
+                            case 103:
+                            case 104:
+                            case 105:
+                            case 106:
+                                {
+                                    coords[0] = 346 + (12 * (PegLocation - 102));
+                                    coords[1] = 211;
+                                    break;
+                                }
+                            case 107:
+                            case 108:
+                            case 109:
+                            case 110:
+                            case 111:
+                                {
+                                    coords[0] = 415 + (12 * (PegLocation - 107));
+                                    coords[1] = 211;
+                                    break;
+                                }
+                            case 112:
+                            case 113:
+                            case 114:
+                            case 115:
+                            case 116:
+                                {
+                                    coords[0] = 483 + (12 * (PegLocation - 112));
+                                    coords[1] = 211;
+                                    break;
+                                }
+                            case 117:
+                                {
+                                    coords[0] = 551;
+                                    coords[1] = 209;
+                                    break;
+                                }
+                            case 118:
+                                {
+                                    coords[0] = 560;
+                                    coords[1] = 202;
+                                    break;
+                                }
+                            case 119:
+                                {
+                                    coords[0] = 563;
+                                    coords[1] = 191;
+                                    break;
+                                }
+                            case 120:
+                                {
+                                    coords[0] = 559;
+                                    coords[1] = 180;
+                                    break;
+                                }
+                            case 121:
+                                {
+                                    coords[0] = 551;
+                                    coords[1] = 171;
+                                    break;
+                                }
+                            case 122:
+                                {
+                                    coords[0] = 530;
+                                    coords[1] = 166;
+                                    break;
+                                }
                             default:
                                 throw new ArgumentOutOfRangeException();
                         }

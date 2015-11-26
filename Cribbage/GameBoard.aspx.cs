@@ -34,6 +34,11 @@ namespace Cribbage
             }
             else
             {
+                if (boardStatus.P1FirstPeg == 122 || boardStatus.P1SecondPeg == 122)
+                    Winner(1);
+                else if (boardStatus.P2FirstPeg == 122 || boardStatus.P2SecondPeg == 122)
+                    Winner(2);
+                
                 Cribbage_Board.Controls.Add(RenderBoard.UpdateBoard(boardStatus));
             }
 
@@ -42,6 +47,7 @@ namespace Cribbage
         
         protected void Page_Load(object sender, EventArgs e)
         {
+            WhosTurnLabel.Text = "It's your turn";
             ScriptManager.GetCurrent(Page).RegisterPostBackControl(ReloadButton);
         }
 
@@ -83,6 +89,8 @@ namespace Cribbage
         {
             List<int> crib = (List<int>)Session["Crib"] ?? new List<int>();
             List<int> hand = (List<int>)Session["Hand"];
+
+            CribGoDiv.Visible = false;
 
             if (crib.Count() < 1)
             {
@@ -180,14 +188,19 @@ namespace Cribbage
                 //}
 
                 if (CounterLabel.Text != "0")
+                {
+
                     ScriptManager.RegisterStartupScript(this, GetType(), "Reload", "myVar = setInterval('ComputerTurn()', 3000)", true);
+                }
 
                 if (AllDone(1))
                 {
                     if (AllDone(2))
                         ScriptManager.RegisterStartupScript(this, GetType(), "Reload", "myVar = setInterval('FinalCount()', 3000)", true);
                     else
+                    {
                         ScriptManager.RegisterStartupScript(this, GetType(), "Reload", "myVar = setInterval('ComputerTurn()', 3000)", true);
+                    }
                 }
             }
 
@@ -234,18 +247,6 @@ namespace Cribbage
             List<int> played = Compute.RetrieveOrder((List<string>)Session["Played"] ?? new List<string>());
 
             List<int> compHand = GetComputerHand(hand);
-
-            //if (LastCard(2))
-            //{
-            //    ComputePoints(FindLastPlayer(played));
-
-            //    CounterLabel.Text = "0";
-
-            //    if (FindLastPlayer(played) == 2)
-            //        ScriptManager.RegisterStartupScript(this, GetType(), "Reload", "myVar = setInterval('ComputerTurn()', 3000)", true);
-
-            //    return;
-            //}
 
             int cardToPlay = 0;
             int highestCount = 0;
@@ -383,7 +384,11 @@ namespace Cribbage
 
                 if (score < 0)
                 {
-                    sum -= card;
+                    if (card > 10)
+                        sum -= 10;
+                    else
+                        sum -= card;
+
                     break;
                 }
 
@@ -420,33 +425,34 @@ namespace Cribbage
                         default:
                             break;
                     }
-                }
-                
-                if (lastCard != 0 && lastCard != card)
-                {
+
                     repeat = 0;
                 }
+                
+                //if (lastCard != 0 && lastCard != card)
+                //{
+                //    repeat = 0;
+                //}
 
                 lastCard = card;
             }
 
             if (sum == 15)
             {
-                points = points + 2;
+                points += 2;
                 Scoreboard.Items.Add("Player " + player.ToString() + " scored 15 for 2");
                 Scoreboard.DataBind();
             }
                 
             else if (sum == 31)
             {
-                points = points + 2;
+                points += 2;
                 CounterLabel.Text = "0";
-                CounterLabel.DataBind();
                 CribGoDiv.Visible = false;
                 Scoreboard.Items.Add("Player " + player.ToString() + " scored 31 for 2");
                 Scoreboard.DataBind();
             }
-            if (LastCard(1) && LastCard(2))
+            else if (LastCard(1) && LastCard(2))
             {
                 points++;
                 CribGoDiv.Visible = false;
@@ -599,6 +605,11 @@ namespace Cribbage
                 }
 
                 countHand.Add(hand[12]);
+
+                if (countHand.Count() != 5)
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
             }
 
             
@@ -680,6 +691,11 @@ namespace Cribbage
 
             //Enable deal button
             DealButtonDiv.Visible = true;
+        }
+
+        protected void Winner(int player)
+        {
+            Response.Redirect("Winner.aspx?Player=" + player.ToString());
         }
     }
 }

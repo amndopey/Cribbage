@@ -68,6 +68,7 @@
   <ItemGroup>
     <Content Include="CSS\Default_Stylesheet.css" />
     <Content Include="CSS\GameBoard.css" />
+    <Content Include="CSS\Winner.css" />
     <Content Include="Default.aspx" />
     <Content Include="GameBoard.aspx" />
     <Content Include="Images\Cards\110.png" />
@@ -135,6 +136,7 @@
     <Content Include="Images\start.jpg" />
     <Content Include="Images\Start_screen.bmp" />
     <Content Include="packages.config" />
+    <Content Include="Winner.aspx" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -164,6 +166,13 @@
       <DependentUpon>GameBoard.aspx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Winner.aspx.cs">
+      <DependentUpon>Winner.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Winner.aspx.designer.cs">
+      <DependentUpon>Winner.aspx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup>

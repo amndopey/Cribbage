@@ -87,6 +87,7 @@
 
     <script type='text/javascript'>
         function ComputerTurn(id) {
+            document.getElementById("WhosTurnLabel").innerHTML = "It's the computer's turn";
             var refreshFunction = document.getElementById('ReloadButton').click();
             clearInterval(myVar)
             //refreshFunction();
