@@ -55,18 +55,15 @@ namespace Cribbage
         {
             DealButtonDiv.Visible = false;
             WhosTurnDiv.Visible = true;
+            Cards cards = Compute.DealHand();
 
-            Session["Hand"] = Compute.DealHand();
-
-            List<int> hand = (List<int>)Session["Hand"];
-
-            if (hand == null)
+            if (cards.Hand == null)
                 throw new ArgumentOutOfRangeException();
 
-            foreach (int card in hand)
+            foreach (int card in cards.Hand)
             {
                 string fileString = String.Empty;
-                int index = hand.ToList().IndexOf(card) + 1;
+                int index = cards.Hand.ToList().IndexOf(card) + 1;
                 if (index < 7)
                 {
                     fileString = "images/Cards/" + card.ToString() + ".png";
@@ -82,19 +79,20 @@ namespace Cribbage
                 if (index < 7)
                     control.Enabled = true;
                 control.DataBind();
+
+                Session["Cards"] = cards;
             }
         }
 
         protected void CardClick(object sender, CommandEventArgs e)
         {
-            List<int> crib = (List<int>)Session["Crib"] ?? new List<int>();
-            List<int> hand = (List<int>)Session["Hand"];
+            Cards cards = (Cards)Session["Cards"];
 
             CribGoDiv.Visible = false;
 
-            if (crib.Count() < 1)
+            if (cards.Crib.Count() < 1)
             {
-                crib.Add(Int32.Parse(e.CommandName) - 1);
+                cards.Crib.Add(Int32.Parse(e.CommandName) - 1);
                 dynamic control = this.FindControl("PlayerCard" + e.CommandName);
                 control.ImageUrl = null;
                 control.DataBind();
@@ -102,12 +100,12 @@ namespace Cribbage
                 CribCard1.ImageUrl = "images/Card_Backs/b2fv.png";
                 CribCard1.DataBind();
             }
-            else if (crib.Count() < 4)
+            else if (cards.Crib.Count() < 4)
             {
-                List<int> allCards = (List<int>)Session["Hand"];
+                //List<int> allCards = (List<int>)Session["Hand"];
                 List<int> compHand = new List<int>();
 
-                crib.Add(Int32.Parse(e.CommandName) - 1);
+                cards.Crib.Add(Int32.Parse(e.CommandName) - 1);
                 dynamic control = this.FindControl("PlayerCard" + e.CommandName);
                 control.ImageUrl = null;
                 control.DataBind();
@@ -117,26 +115,26 @@ namespace Cribbage
 
                 for (int i = 6; i <= 11; i++)
                 {
-                    compHand.Add(allCards[i]);
+                    compHand.Add(cards.Hand[i]);
                 }
 
                 List<int> bestHand = Compute.FindBestHand(compHand);
 
                 for (int i = 6; i <= 11; i++)
                 {
-                    if (!bestHand.Contains(allCards[i]))
+                    if (!bestHand.Contains(cards.Hand[i]))
                     {
-                        crib.Add(i);
+                        cards.Crib.Add(i);
                         dynamic control2 = this.FindControl("PlayerCard" + (i + 1).ToString());
                         control2.ImageUrl = null;
                         control2.DataBind();
 
-                        if (crib.Count() == 3)
+                        if (cards.Crib.Count() == 3)
                         {
                             CribCard3.ImageUrl = "images/Card_Backs/b1pr.png";
                             CribCard3.DataBind();
                         }
-                        if (crib.Count() == 4)
+                        if (cards.Crib.Count() == 4)
                         {
                             CribCard4.ImageUrl = "images/Card_Backs/b1pr.png";
                             CribCard4.DataBind();
@@ -145,7 +143,7 @@ namespace Cribbage
                 }
 
                 //Show extra card
-                this.PlayerCard13.ImageUrl = "images/cards/" + hand[12].ToString() + ".png";
+                this.PlayerCard13.ImageUrl = "images/cards/" + cards.Hand[12].ToString() + ".png";
 
                 //Show counter
                 this.CounterDiv.Visible = true;
@@ -160,27 +158,39 @@ namespace Cribbage
             {
                 //Shade played card and disable the link
                 dynamic control = this.FindControl("PlayerCard" + e.CommandName);
-                control.ImageUrl = "images/Cards/" + hand[Int32.Parse(e.CommandName) - 1].ToString() + ".png";
+                control.ImageUrl = "images/Cards/" + cards.Hand[Int32.Parse(e.CommandName) - 1].ToString() + ".png";
                 control.CssClass = "ShadedCards";
                 control.Enabled = false;
                 control.DataBind();
 
                 //Get stripped card
-                int cardValue = Compute.StripSuit(hand[Int32.Parse(e.CommandName) - 1]);
+                int cardValue = Compute.StripSuit(cards.Hand[Int32.Parse(e.CommandName) - 1]);
 
                 //Pull played cards and add to list
-                List<int> played = Compute.RetrieveOrder((List<string>)Session["Played"] ?? new List<string>());
-                played.Add(Int32.Parse(e.CommandName) - 1);
-                List<string> storeIt = Compute.StoreOrder(played);
+                //List<int> played = Compute.RetrieveOrder((List<string>)Session["Played"] ?? new List<string>());
+                //played.Add(Int32.Parse(e.CommandName) - 1);
+                //List<string> storeIt = Compute.StoreOrder(played);
 
-                Session["Played"] = storeIt;
+                //Session["Played"] = storeIt;
+
+                cards.Played.Add(Int32.Parse(e.CommandName) - 1);
 
                 //Add to counter
                 if (cardValue > 10)
                     cardValue = 10;
                 CounterLabel.Text = (Int32.Parse(CounterLabel.Text) + cardValue).ToString();
 
-                ComputePoints(FindLastPlayer(played));
+                PointBreakdown points = Compute.ComputePoints(cards);
+
+                if (points.Points > 0)
+                {
+                    foreach (string result in points.Breakdown)
+                    {
+                        Scoreboard.Items.Add(result);
+                    }
+
+                    Session["BoardStatus"] = Compute.AddPointsToBoard((BoardStatus)Session["BoardStatus"], Compute.FindLastPlayer(cards), points.Points);
+                }
 
                 //if (LastCard(2) && !LastCard(1))
                 //{
@@ -193,9 +203,9 @@ namespace Cribbage
                     ScriptManager.RegisterStartupScript(this, GetType(), "Reload", "myVar = setInterval('ComputerTurn()', 3000)", true);
                 }
 
-                if (AllDone(1))
+                if (Compute.AllDone(cards, 1))
                 {
-                    if (AllDone(2))
+                    if (Compute.AllDone(cards, 2))
                         ScriptManager.RegisterStartupScript(this, GetType(), "Reload", "myVar = setInterval('FinalCount()', 3000)", true);
                     else
                     {
@@ -205,19 +215,20 @@ namespace Cribbage
             }
 
 
-            Session["Crib"] = crib;
+            Session["Cards"] = cards;
         }
 
-        private List<int> GetComputerHand(List<int> hand)
+        private List<int> GetComputerHand(Cards cards)
         {
-            List<int> crib = (List<int>)Session["Crib"];
+            //List<int> crib = (List<int>)Session["Crib"];
+            //Cards cards = (Cards)Session["Cards"];
             List<int> compHand = new List<int>();
             
             for (int i = 6; i <= 11; i++)
             {
                 dynamic control = this.FindControl("PlayerCard" + (i + 1).ToString());
 
-                if ((!crib.Contains(i)) && control.ImageUrl == "images/Card_Backs/b1fv.png" && control.Visible == true)
+                if ((!cards.Crib.Contains(i)) && control.ImageUrl == "images/Card_Backs/b1fv.png" && control.Visible == true)
                     compHand.Add(i);
             }
 
@@ -227,18 +238,19 @@ namespace Cribbage
         private void ComputerPlay()
         {
             //Get computer hand
-            List<int> hand = (List<int>)Session["Hand"];
-            List<int> crib = (List<int>)Session["Crib"];
-            List<int> played = Compute.RetrieveOrder((List<string>)Session["Played"] ?? new List<string>());
+            //List<int> hand = (List<int>)Session["Hand"];
+            //List<int> crib = (List<int>)Session["Crib"];
+            //List<int> played = Compute.RetrieveOrder((List<string>)Session["Played"] ?? new List<string>());
+            Cards cards = (Cards)Session["Cards"];
 
-            List<int> compHand = GetComputerHand(hand);
+            List<int> compHand = GetComputerHand(cards);
 
             int cardToPlay = 0;
             int highestCount = 0;
 
             foreach (int index in compHand)
             {
-                int card = Compute.StripSuit(hand[index]);
+                int card = Compute.StripSuit(cards.Hand[index]);
                 if (card > 10)
                     card = 10;
                 int points = Int32.Parse(CounterLabel.Text) + card;
@@ -253,7 +265,7 @@ namespace Cribbage
                     cardToPlay = index;
                     highestCount = 31;
                 }
-                else if (played.Count() > 0 && card == played[0])
+                else if (cards.Played.Count() > 0 && card == cards.Played[0])
                 {
                     cardToPlay = index;
                     highestCount = 30;
@@ -270,15 +282,25 @@ namespace Cribbage
          
             if (cardToPlay == 0)
             {
-                if (AllDone(1) && AllDone(2))
+                if (Compute.AllDone(cards, 1) && Compute.AllDone(cards, 2))
                     ScriptManager.RegisterStartupScript(this, GetType(), "Reload", "myVar = setInterval('FinalCount()', 3000)", true);
 
-                if (LastCard(1))
+                if (Compute.LastCard(cards, 1))
                 {
-                    int lastPlayed = FindLastPlayer(played);
-                    ComputePoints(lastPlayed);
+                    PointBreakdown points = Compute.ComputePoints(cards);
+
+                    if (points.Points > 0)
+                    {
+                        foreach (string result in points.Breakdown)
+                        {
+                            Scoreboard.Items.Add(result);
+                        }
+
+                        Session["BoardStatus"] = Compute.AddPointsToBoard((BoardStatus)Session["BoardStatus"], Compute.FindLastPlayer(cards), points.Points);
+                    }
+
                     CounterLabel.Text = "0";
-                    if (lastPlayed == 2)
+                    if (Compute.FindLastPlayer(cards) == 2)
                     {
                         ScriptManager.RegisterStartupScript(this, GetType(), "Reload", "myVar = setInterval('ComputerTurn()', 3000)", true);
                     }
@@ -292,29 +314,39 @@ namespace Cribbage
             else
             {
                 dynamic control = this.FindControl("PlayerCard" + (cardToPlay + 1).ToString());
-                control.ImageUrl = "images/Cards/" + hand[cardToPlay].ToString() + ".png";
+                control.ImageUrl = "images/Cards/" + cards.Hand[cardToPlay].ToString() + ".png";
                 control.Enabled = false;
                 control.DataBind();
 
                 //Add card to played array
-                played.Add(cardToPlay);
-                List<string> storeIt = Compute.StoreOrder(played);
-                Session["Played"] = storeIt;
+                cards.Played.Add(cardToPlay);
+                //List<string> storeIt = Compute.StoreOrder(played);
+                //Session["Played"] = storeIt;
 
                 //Strip suit and tally counter
-                int cardValue = Compute.StripSuit(hand[cardToPlay]);
+                int cardValue = Compute.StripSuit(cards.Hand[cardToPlay]);
                 if (cardValue > 10)
                     cardValue = 10;
                 CounterLabel.Text = (Int32.Parse(CounterLabel.Text) + cardValue).ToString();
 
-                if (LastCard(1) && !AllDone(1))
+                if (Compute.LastCard(cards, 1) && !Compute.AllDone(cards, 1))
                     ScriptManager.RegisterStartupScript(this, GetType(), "Reload", "myVar = setInterval('ComputerTurn()', 3000)", true);
-                
-                ComputePoints(FindLastPlayer(played));
-                
-                if (AllDone(1))
+
+                PointBreakdown points = Compute.ComputePoints(cards);
+
+                if (points.Points > 0)
                 {
-                    if (AllDone(2))
+                    foreach (string result in points.Breakdown)
+                    {
+                        Scoreboard.Items.Add(result);
+                    }
+
+                    Session["BoardStatus"] = Compute.AddPointsToBoard((BoardStatus)Session["BoardStatus"], Compute.FindLastPlayer(cards), points.Points);
+                }
+
+                if (Compute.AllDone(cards, 1))
+                {
+                    if (Compute.AllDone(cards, 2))
                         ScriptManager.RegisterStartupScript(this, GetType(), "Reload", "myVar = setInterval('FinalCount()', 3000)", true);
                     else
                     {
@@ -324,7 +356,7 @@ namespace Cribbage
                 }
             }
 
-
+            Session["Cards"] = cards;
         }
 
         protected void ReloadButton_Click(object sender, EventArgs e)
@@ -336,37 +368,6 @@ namespace Cribbage
         //{
         //    ComputerLastCard();
         //}
-
-        protected bool AllDone(int player)
-        {
-            bool allDone = true;
-            if (player == 1)
-            {
-                for (int i = 0; i <= 5; i++)
-                {
-                    dynamic control2 = this.FindControl("PlayerCard" + (i + 1).ToString());
-                    if (control2.CssClass != "ShadedCards" && !String.IsNullOrEmpty(control2.ImageUrl))
-                    {
-                        allDone = false;
-                    }
-                }
-            }
-            else if (player == 2)
-            {
-                for (int i = 6; i <= 11; i++)
-                {
-                    dynamic control2 = this.FindControl("PlayerCard" + (i + 1).ToString());
-                    if (control2.ImageUrl == "images/Card_Backs/b1fv.png")
-                    {
-                        allDone = false;
-                    }
-                }
-            }
-            else
-                throw new ArgumentOutOfRangeException();
-
-            return allDone;
-        }
 
         protected void FinalCountButton_Click(object sender, EventArgs e)
         {

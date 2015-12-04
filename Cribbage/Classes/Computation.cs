@@ -122,9 +122,9 @@ namespace Cribbage.Classes
             return bestHand;
         }
 
-        static public List<int> DealHand()
+        static public Cards DealHand()
         {
-            List<int> hand = new List<int>();
+            Cards cards = new Cards();
             Random rng = new Random();
 
             do
@@ -136,13 +136,13 @@ namespace Cribbage.Classes
                 //Get card suit
                 card += (rng.Next(1, 4)) * 100;
 
-                if (!hand.Contains(card))
+                if (!cards.Hand.Contains(card))
                 {
-                    hand.Add(card);
+                    cards.Hand.Add(card);
                 }
-            } while (hand.Count() < 13);
+            } while (cards.Hand.Count() < 13);
             
-            return hand;
+            return cards;
         }
 
         static public List<int> StripSuit(List<int> hand)
@@ -271,11 +271,15 @@ namespace Cribbage.Classes
             else if (player == 2)
                 startingCard = 6;
 
-            for (int i = startingCard; i < startingCard - 6; i++)
+            for (int i = startingCard; i < startingCard + 6; i++)
             {
-                if (cards.Played.IndexOf(i) != -1)
+                if (cards.Played.IndexOf(i) == -1)
                 {
-                    if (score + StripSuit(cards.Hand[i]) < 31)
+                    int cardCheck = StripSuit(cards.Hand[i]);
+                    if (cardCheck > 10)
+                        cardCheck = 10;
+
+                    if (score + cardCheck < 31)
                     {
                         return false;
                     }
@@ -392,6 +396,28 @@ namespace Cribbage.Classes
             }
 
             return results;
+        }
+
+        static public bool AllDone(Cards cards, int player)
+        {
+            int startCard = 0;
+
+            if (player == 1)
+                startCard = 0;
+            else if (player == 2)
+                startCard = 6;
+            else
+                throw new ArgumentOutOfRangeException();
+
+            for (int i = startCard; i < startCard + 6; i++)
+            {
+                if (cards.Played.IndexOf(i) == -1)
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
     }

@@ -19,14 +19,58 @@ namespace Cribbage.Classes
 
     public class PointBreakdown
     {
-        public int Points { get; set; }
-        public List<string> Breakdown { get; set; }
+        private int points;
+        public int Points
+        {
+            get { return points; }
+            set { points = value; }
+        }
+
+        private List<string> breakdown;
+        public List<string> Breakdown
+        {
+            get {
+                if (breakdown == null)
+                    breakdown = new List<string>();
+                return breakdown;
+            }
+            set { breakdown = value; }
+        }
     }
 
     public class Cards
     {
-        public List<int> Hand { get; set; }
-        public List<int> Crib { get; set; }
-        public List<int> Played { get; set; }
+        private List<int> hand;
+        public List<int> Hand
+        {
+            get {
+                if (hand == null)
+                    hand = new List<int>();
+                return hand;
+            }
+            set { hand = value; }
+        }
+
+        private List<int> crib;
+        public List<int> Crib
+        {
+            get {
+                if (crib == null)
+                    crib = new List<int>();
+                return crib;
+            }
+            set { crib = value; }
+        }
+
+        private List<int> played;
+        public List<int> Played
+        {
+            get {
+                if (played == null)
+                    played = new List<int>();
+                return played;
+            }
+            set { played = value; }
+        }
     }
 }
