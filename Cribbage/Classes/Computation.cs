@@ -245,5 +245,154 @@ namespace Cribbage.Classes
 
             return returnedList;
         }
+
+        static public int FindLastPlayer(Cards cards)
+        {
+            cards.Played.Reverse();
+
+            foreach (int card in cards.Played)
+            {
+                if (card <= 5)
+                    return 1;
+                if (card >= 6 && card <= 11)
+                    return 2;
+            }
+
+            throw new IndexOutOfRangeException();
+        }
+
+        static public bool LastCard(Cards cards, int player)
+        {
+            int score = FindScore(cards);
+            int startingCard = 0;
+
+            if (player == 1)
+                startingCard = 0;
+            else if (player == 2)
+                startingCard = 6;
+
+            for (int i = startingCard; i < startingCard - 6; i++)
+            {
+                if (cards.Played.IndexOf(i) != -1)
+                {
+                    if (score + StripSuit(cards.Hand[i]) < 31)
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        static public int FindScore(Cards cards)
+        {
+            int score = 0;
+            
+            foreach (int cardIndex in cards.Played)
+            {
+                int strippedCard = Compute.StripSuit(cards.Hand[cardIndex]);
+
+                if (score + strippedCard > 31)
+                {
+                    score = strippedCard;
+                }
+                else
+                {
+                    score += strippedCard;
+                }
+            }
+
+            return score;
+        }
+
+        static public PointBreakdown ComputePoints(Cards cards)
+        {
+            PointBreakdown results = new PointBreakdown();
+
+            int totalPlayed = cards.Played.Count();
+            int lastPlayer = FindLastPlayer(cards);
+            int score = FindScore(cards);
+
+            int lastCard = 0;
+            int repeat = 1;
+
+            cards.Played.Reverse();
+
+            foreach (int index in cards.Played)
+            {
+
+
+                int card = Compute.StripSuit(cards.Hand[index]);
+
+                if (card > 10)
+                {
+                    score -= 10;
+                }
+                else
+                {
+                    score -= card;
+                }
+
+                if (score < 0)
+                {
+                    break;
+                }
+
+                if ((card == lastCard && repeat != 0))
+                {
+                    repeat++;
+                }
+                else if (repeat > 1)
+                {
+                    switch (repeat)
+                    {
+                        case 2:
+                            {
+                                results.Points += 2;
+                                results.Breakdown.Add("Player " + lastPlayer.ToString() + " scored a double for 2");
+                                break;
+                            }
+                        case 3:
+                            {
+                                results.Points += 6;
+                                results.Breakdown.Add("Player " + lastPlayer.ToString() + " scored a triple for 6");
+                                break;
+                            }
+                        case 4:
+                            {
+                                results.Points += 12;
+                                results.Breakdown.Add("Player " + lastPlayer.ToString() + " scored a quadruple for 12");
+                                break;
+                            }
+                        default:
+                            break;
+                    }
+
+                    repeat = 0;
+                }
+
+                lastCard = card;
+            }
+
+            if (FindScore(cards) == 15)
+            {
+                results.Points += 2;
+                results.Breakdown.Add("Player " + lastPlayer.ToString() + " scored 15 for 2");
+            }
+            else if (FindScore(cards) == 31)
+            {
+                results.Points += 2;
+                results.Breakdown.Add("Player " + lastPlayer.ToString() + " scored 31 for 2");
+            }
+            else if (LastCard(cards, 1) && LastCard(cards, 2))
+            {
+                results.Points++;
+                results.Breakdown.Add("Player " + lastPlayer.ToString() + " scored 1 for last card");
+            }
+
+            return results;
+        }
+
     }
 }

@@ -47,8 +47,8 @@ namespace Cribbage
         
         protected void Page_Load(object sender, EventArgs e)
         {
-            WhosTurnLabel.Text = "It's your turn";
-            ScriptManager.GetCurrent(Page).RegisterPostBackControl(ReloadButton);
+            //WhosTurnLabel.Text = "It's your turn";
+            //ScriptManager.GetCurrent(Page).RegisterPostBackControl(ReloadButton);
         }
 
         protected void DealButton_Click(object sender, EventArgs e)
@@ -224,21 +224,6 @@ namespace Cribbage
             return compHand;
         }
 
-        private int FindLastPlayer(List<int> played)
-        {
-            played.Reverse();
-            
-            foreach (int card in played)
-            {
-                if (card <= 5)
-                    return 1;
-                if (card >= 6 && card <= 11)
-                    return 2;
-            }
-
-            throw new IndexOutOfRangeException();
-        }
-
         private void ComputerPlay()
         {
             //Get computer hand
@@ -352,119 +337,6 @@ namespace Cribbage
         //    ComputerLastCard();
         //}
 
-        protected void ComputePoints(int player)
-        {
-            List<int> hand = (List<int>)Session["Hand"];
-            List<int> played = Compute.RetrieveOrder((List<string>)Session["Played"] ?? new List<string>());
-            
-            int totalPlayed = played.Count();
-            int points = 0;
-            int score = Int16.Parse(CounterLabel.Text);
-
-            int lastCard = 0;
-            int repeat = 1;
-            int sum = 0;
-
-            played.Reverse();
-
-            foreach (int index in played)
-            {
-                int card = Compute.StripSuit(hand[index]);
-
-                if (card > 10)
-                {
-                    sum += 10;
-                    score -= 10;
-                }
-                else
-                {
-                    sum += card;
-                    score -= card;
-                }
-
-                if (score < 0)
-                {
-                    if (card > 10)
-                        sum -= 10;
-                    else
-                        sum -= card;
-
-                    break;
-                }
-
-                if ((card == lastCard && repeat != 0))
-                {
-                    repeat++;
-                }
-                
-                if ((LastCard(1) && LastCard(2)) || (card != lastCard && lastCard != 0 && repeat > 1))
-                {
-                    switch (repeat)
-                    {
-                        case 2:
-                            {
-                                points = points + 2;
-                                Scoreboard.Items.Add("Player " + player.ToString() + " scored a double for 2");
-                                Scoreboard.DataBind();
-                                break;
-                            }
-                        case 3:
-                            {
-                                points = points + 6;
-                                Scoreboard.Items.Add("Player " + player.ToString() + " scored a triple for 6");
-                                Scoreboard.DataBind();
-                                break;
-                            }
-                        case 4:
-                            {
-                                points = points + 12;
-                                Scoreboard.Items.Add("Player " + player.ToString() + " scored a quadruple for 12");
-                                Scoreboard.DataBind();
-                                break;
-                            }
-                        default:
-                            break;
-                    }
-
-                    repeat = 0;
-                }
-                
-                //if (lastCard != 0 && lastCard != card)
-                //{
-                //    repeat = 0;
-                //}
-
-                lastCard = card;
-            }
-
-            if (sum == 15)
-            {
-                points += 2;
-                Scoreboard.Items.Add("Player " + player.ToString() + " scored 15 for 2");
-                Scoreboard.DataBind();
-            }
-                
-            else if (sum == 31)
-            {
-                points += 2;
-                CounterLabel.Text = "0";
-                CribGoDiv.Visible = false;
-                Scoreboard.Items.Add("Player " + player.ToString() + " scored 31 for 2");
-                Scoreboard.DataBind();
-            }
-            else if (LastCard(1) && LastCard(2))
-            {
-                points++;
-                CribGoDiv.Visible = false;
-                Scoreboard.Items.Add("Player " + player.ToString() + " scored 1 for last card");
-                Scoreboard.DataBind();
-                CounterLabel.Text = "0";
-            }
-
-            if (points > 0)
-                Session["BoardStatus"] = Compute.AddPointsToBoard((BoardStatus)Session["BoardStatus"], player, points);
-        }
-
         protected bool AllDone(int player)
         {
             bool allDone = true;
@@ -494,51 +366,6 @@ namespace Cribbage
                 throw new ArgumentOutOfRangeException();
 
             return allDone;
-        }
-
-        protected bool LastCard(int Player)
-        {
-            bool lastCard = true;
-            List<int> hand = (List<int>)Session["Hand"];
-
-            if (Player == 1)
-            {
-                for (int i = 0; i <= 5; i++)
-                {
-                    dynamic control = this.FindControl("PlayerCard" + (i + 1).ToString());
-                    if (!String.IsNullOrEmpty(control.ImageUrl) && control.CssClass != "ShadedCards")
-                    {
-                        int card = Compute.StripSuit(hand[i]);
-                        if (card > 10)
-                            card = 10;
-                        if (card + Int32.Parse(CounterLabel.Text) <= 31)
-                        {
-                            lastCard = false;
-                            break;
-                        }
-                    }
-                }
-            }
-            else if (Player == 2)
-            {
-                for (int i = 6; i <= 11; i++)
-                {
-                    dynamic control = this.FindControl("PlayerCard" + (i + 1).ToString());
-                    if (control.Visible == true && control.ImageUrl == "images/Card_Backs/b1fv.png")
-                    {
-                        int card = Compute.StripSuit(hand[i]);
-                        if (card > 10)
-                            card = 10;
-                        if (card + Int32.Parse(CounterLabel.Text) <= 31)
-                        {
-                            lastCard = false;
-                            break;
-                        }
-                    }
-                }
-            }
-
-            return lastCard;
         }
 
         protected void FinalCountButton_Click(object sender, EventArgs e)

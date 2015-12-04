@@ -16,4 +16,17 @@ namespace Cribbage.Classes
         public int P2FirstPeg { get; set; }
         public int P2SecondPeg { get; set; }
     }
+
+    public class PointBreakdown
+    {
+        public int Points { get; set; }
+        public List<string> Breakdown { get; set; }
+    }
+
+    public class Cards
+    {
+        public List<int> Hand { get; set; }
+        public List<int> Crib { get; set; }
+        public List<int> Played { get; set; }
+    }
 }
