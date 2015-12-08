@@ -196,10 +196,13 @@ namespace Cribbage
                 //{
                 //    return;
                 //}
+                if (Compute.LastCard(cards, 1) && Compute.LastCard(cards, 2))
+                {
+                    this.CounterLabel.Text = "0";
+                }
 
                 if (CounterLabel.Text != "0")
                 {
-
                     ScriptManager.RegisterStartupScript(this, GetType(), "Reload", "myVar = setInterval('ComputerTurn()', 3000)", true);
                 }
 
@@ -226,9 +229,7 @@ namespace Cribbage
             
             for (int i = 6; i <= 11; i++)
             {
-                dynamic control = this.FindControl("PlayerCard" + (i + 1).ToString());
-
-                if ((!cards.Crib.Contains(i)) && control.ImageUrl == "images/Card_Backs/b1fv.png" && control.Visible == true)
+                if ((!cards.Crib.Contains(i)) && !cards.Played.Contains(i))
                     compHand.Add(i);
             }
 
@@ -245,8 +246,24 @@ namespace Cribbage
 
             List<int> compHand = GetComputerHand(cards);
 
+            //Check if there are any cards to play
+            if (compHand.Count() == 0)
+            {
+                if (Compute.AllDone(cards, 1) && Compute.AllDone(cards, 2))
+                {
+                    ScriptManager.RegisterStartupScript(this, GetType(), "Reload", "myVar = setInterval('FinalCount()', 3000)", true);
+                }
+                else
+                {
+                    CribGoDiv.Visible = true;
+                }
+                return;
+            }
+
             int cardToPlay = 0;
-            int highestCount = 0;
+            int potentialPoints = 0;
+            int highestPotentialPoints = 0;
+            int currentScore = Compute.FindScore(cards);
 
             foreach (int index in compHand)
             {
@@ -255,35 +272,60 @@ namespace Cribbage
                     card = 10;
                 int points = Int32.Parse(CounterLabel.Text) + card;
 
-                if (points == 15)
+                //Verify card will not go over 31
+                if (card + currentScore > 31)
                 {
-                    cardToPlay = index;
+                    continue;
                 }
 
-                else if (points == 31)
+                if (points == 15)
+                {
+                    potentialPoints += 2;
+                }
+
+                if (points == 31)
+                {
+                    potentialPoints += 2;
+                }
+
+                //Check if last 3 cards were played the same for a quad
+                if (cards.Played.Count() > 3 &&
+                    card == Compute.StripSuit(cards.Hand[cards.Played[cards.Played.Count - 1]]) &&
+                    card == Compute.StripSuit(cards.Hand[cards.Played[cards.Played.Count - 2]]) &&
+                    card == Compute.StripSuit(cards.Hand[cards.Played[cards.Played.Count - 3]]))
+                {
+                    potentialPoints += 12;
+                }
+
+                //Check if last 2 cards were played the same for a triple
+                else if (cards.Played.Count() > 2 &&
+                    card == Compute.StripSuit(cards.Hand[cards.Played[cards.Played.Count - 1]]) &&
+                    card == Compute.StripSuit(cards.Hand[cards.Played[cards.Played.Count - 2]]))
+                {
+                    potentialPoints += 6;
+                }
+
+                //Check if last card played was the same number (for double)
+                else if (cards.Played.Count() > 1 &&
+                    card == Compute.StripSuit(cards.Hand[cards.Played[cards.Played.Count - 1]]))
+                {
+                    potentialPoints += 2;
+                }
+
+                //TODO: Add check for run
+
+                //Check if potential points is higher than highest points found
+                if (potentialPoints > highestPotentialPoints || cardToPlay == 0)
                 {
                     cardToPlay = index;
-                    highestCount = 31;
+                    highestPotentialPoints = potentialPoints;
                 }
-                else if (cards.Played.Count() > 0 && card == cards.Played[0])
-                {
-                    cardToPlay = index;
-                    highestCount = 30;
-                }
-                else if (points < 31)
-                {
-                    if (points > highestCount)
-                    {
-                        cardToPlay = index;
-                        highestCount = points;
-                    }
-                }
+
+                //TODO: Add check to play highest valued card
             }
          
             if (cardToPlay == 0)
             {
-                if (Compute.AllDone(cards, 1) && Compute.AllDone(cards, 2))
-                    ScriptManager.RegisterStartupScript(this, GetType(), "Reload", "myVar = setInterval('FinalCount()', 3000)", true);
 
                 if (Compute.LastCard(cards, 1))
                 {
@@ -353,6 +395,12 @@ namespace Cribbage
                         //LastCardDiv.Visible = false;
                         ScriptManager.RegisterStartupScript(this, GetType(), "Reload", "myVar = setInterval('ComputerTurn()', 3000)", true);
                     }
+                }
+
+                if (Compute.LastCard(cards, 1) && Compute.LastCard(cards, 2))
+                {
+                    this.CounterLabel.Text = "0";
+                    ScriptManager.RegisterStartupScript(this, GetType(), "Reload", "myVar = setInterval('ComputerTurn()', 3000)", true);
                 }
             }
 

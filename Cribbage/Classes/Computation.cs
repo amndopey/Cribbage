@@ -8,6 +8,8 @@ namespace Cribbage.Classes
 {
     public class Compute
     {
+        private const bool Debug = true;
+        
         static private IEnumerable<int> constructSetFromBits(int i)
         {
             for (int n = 0; i != 0; i /= 2, n++)
@@ -127,21 +129,39 @@ namespace Cribbage.Classes
             Cards cards = new Cards();
             Random rng = new Random();
 
-            do
+            if (Debug == true)
             {
-                int card = new int();
-
-                //Get card number
-                card = rng.Next(1, 13);
-                //Get card suit
-                card += (rng.Next(1, 4)) * 100;
-
-                if (!cards.Hand.Contains(card))
+                cards.Hand.Add(101);
+                cards.Hand.Add(102);
+                cards.Hand.Add(103);
+                cards.Hand.Add(104);
+                cards.Hand.Add(105);
+                cards.Hand.Add(106);
+                cards.Hand.Add(201);
+                cards.Hand.Add(202);
+                cards.Hand.Add(203);
+                cards.Hand.Add(204);
+                cards.Hand.Add(205);
+                cards.Hand.Add(206);
+                cards.Hand.Add(207);
+            }
+            else
+            {
+                do
                 {
-                    cards.Hand.Add(card);
-                }
-            } while (cards.Hand.Count() < 13);
-            
+                    int card = new int();
+
+                    //Get card number
+                    card = rng.Next(1, 13);
+                    //Get card suit
+                    card += (rng.Next(1, 4)) * 100;
+
+                    if (!cards.Hand.Contains(card))
+                    {
+                        cards.Hand.Add(card);
+                    }
+                } while (cards.Hand.Count() < 13);
+            }
             return cards;
         }
 
@@ -248,9 +268,9 @@ namespace Cribbage.Classes
 
         static public int FindLastPlayer(Cards cards)
         {
-            cards.Played.Reverse();
+            //cards.Played.Reverse();
 
-            foreach (int card in cards.Played)
+            foreach (int card in cards.Played.AsEnumerable().Reverse())
             {
                 if (card <= 5)
                     return 1;
@@ -320,10 +340,12 @@ namespace Cribbage.Classes
 
             int lastCard = 0;
             int repeat = 1;
+            int tempPointsCheck = 0;
+            string tempPointsCheckBreakdown = "";
 
-            cards.Played.Reverse();
+            //cards.Played.Reverse();
 
-            foreach (int index in cards.Played)
+            foreach (int index in cards.Played.AsEnumerable().Reverse())
             {
 
 
@@ -343,40 +365,49 @@ namespace Cribbage.Classes
                     break;
                 }
 
-                if ((card == lastCard && repeat != 0))
+                if (card == lastCard && repeat != 0)
                 {
                     repeat++;
                 }
-                else if (repeat > 1)
+                else if (lastCard != 0)
+                {
+                    repeat = 0;
+                }
+
+                if (repeat > 1)
                 {
                     switch (repeat)
                     {
                         case 2:
                             {
-                                results.Points += 2;
-                                results.Breakdown.Add("Player " + lastPlayer.ToString() + " scored a double for 2");
+                                tempPointsCheck = 2;
+                                tempPointsCheckBreakdown = "Player " + lastPlayer.ToString() + " scored a double for 2";
                                 break;
                             }
                         case 3:
                             {
-                                results.Points += 6;
-                                results.Breakdown.Add("Player " + lastPlayer.ToString() + " scored a triple for 6");
+                                tempPointsCheck = 6;
+                                tempPointsCheckBreakdown = "Player " + lastPlayer.ToString() + " scored a triple for 6";
                                 break;
                             }
                         case 4:
                             {
-                                results.Points += 12;
-                                results.Breakdown.Add("Player " + lastPlayer.ToString() + " scored a quadruple for 12");
+                                tempPointsCheck = 12;
+                                tempPointsCheckBreakdown = "Player " + lastPlayer.ToString() + " scored a quadruple for 12";
                                 break;
                             }
                         default:
                             break;
                     }
-
-                    repeat = 0;
                 }
 
                 lastCard = card;
+            }
+
+            if (tempPointsCheck > 0)
+            {
+                results.Points += tempPointsCheck;
+                results.Breakdown.Add(tempPointsCheckBreakdown);
             }
 
             if (FindScore(cards) == 15)
@@ -411,7 +442,7 @@ namespace Cribbage.Classes
 
             for (int i = startCard; i < startCard + 6; i++)
             {
-                if (cards.Played.IndexOf(i) == -1)
+                if (cards.Played.IndexOf(i) == -1 && cards.Crib.IndexOf(i) == -1)
                 {
                     return false;
                 }
