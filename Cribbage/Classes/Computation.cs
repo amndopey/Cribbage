@@ -312,10 +312,14 @@ namespace Cribbage.Classes
         static public int FindScore(Cards cards)
         {
             int score = 0;
+            bool scoreReset = false;
             
             foreach (int cardIndex in cards.Played)
             {
                 int strippedCard = Compute.StripSuit(cards.Hand[cardIndex]);
+                
+                if (strippedCard > 10)
+                    strippedCard = 10;
 
                 if (score + strippedCard > 31)
                 {
@@ -326,6 +330,8 @@ namespace Cribbage.Classes
                     score += strippedCard;
                 }
             }
+
+
 
             return score;
         }
