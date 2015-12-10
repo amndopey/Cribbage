@@ -293,7 +293,7 @@ namespace Cribbage.Classes
 
             for (int i = startingCard; i < startingCard + 6; i++)
             {
-                if (cards.Played.IndexOf(i) == -1)
+                if (cards.Played.IndexOf(i) == -1 && cards.Crib.IndexOf(i) == -1)
                 {
                     int cardCheck = StripSuit(cards.Hand[i]);
                     if (cardCheck > 10)
@@ -312,7 +312,7 @@ namespace Cribbage.Classes
         static public int FindScore(Cards cards)
         {
             int score = 0;
-            bool scoreReset = true;
+            //bool scoreReset = true;
             
             foreach (int cardIndex in cards.Played)
             {
@@ -444,7 +444,7 @@ namespace Cribbage.Classes
                 results.Points += 2;
                 results.Breakdown.Add("Player " + lastPlayer.ToString() + " scored 31 for 2");
             }
-            else if (LastCard(cards, 1) && LastCard(cards, 2))
+            if (LastCard(cards, 1) && LastCard(cards, 2))
             {
                 results.Points++;
                 results.Breakdown.Add("Player " + lastPlayer.ToString() + " scored 1 for last card");

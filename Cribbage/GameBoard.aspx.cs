@@ -399,6 +399,8 @@ namespace Cribbage
                         //LastCardDiv.Visible = false;
                         ScriptManager.RegisterStartupScript(this, GetType(), "Reload", "myVar = setInterval('ComputerTurn()', 3000)", true);
                     }
+
+                    return;
                 }
 
                 if (Compute.LastCard(cards, 1) && Compute.LastCard(cards, 2))
@@ -461,6 +463,8 @@ namespace Cribbage
                     dynamic control2 = this.FindControl("CribCard" + ((i - beginCount) + 1).ToString());
                     control2.ImageUrl = null;
                 }
+
+                cards.Crib = new List<int>();
             }
             else if (playerCount == 1)
             {
@@ -522,7 +526,7 @@ namespace Cribbage
                 Session["PlayerCount"] = 1;
             }
 
-            if (cards.Crib.Count() != 5)
+            if ((cards.Crib.Count() != 5 && cards.Crib.Count() != 0) || (cards.Crib.Count() == 5 && cards.Hand.Count == 0))
             {
                 ScriptManager.RegisterStartupScript(this, GetType(), "Reload", "myVar = setInterval('FinalCount()', 5000)", true);
             }
