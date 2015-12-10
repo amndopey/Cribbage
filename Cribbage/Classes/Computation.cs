@@ -131,17 +131,17 @@ namespace Cribbage.Classes
 
             if (Debug == true)
             {
-                cards.Hand.Add(101);
-                cards.Hand.Add(102);
+                cards.Hand.Add(105);
+                cards.Hand.Add(205);
                 cards.Hand.Add(103);
                 cards.Hand.Add(104);
-                cards.Hand.Add(105);
+                cards.Hand.Add(110);
                 cards.Hand.Add(106);
-                cards.Hand.Add(201);
-                cards.Hand.Add(202);
+                cards.Hand.Add(305);
+                cards.Hand.Add(405);
                 cards.Hand.Add(203);
                 cards.Hand.Add(204);
-                cards.Hand.Add(205);
+                cards.Hand.Add(209);
                 cards.Hand.Add(206);
                 cards.Hand.Add(207);
             }

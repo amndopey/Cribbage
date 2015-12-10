@@ -43,6 +43,13 @@ namespace Cribbage
             }
 
             Scoreboard.SelectedIndex = Scoreboard.Items.Count - 1;
+
+            //Set who's turn it is
+            string whosTurn = (string)Session["WhosTurn"];
+            WhosTurnLabel.Text = whosTurn;
+
+            //Reset value to your turn
+            Session["WhosTurn"] = "It's Your Turn";
         }
         
         protected void Page_Load(object sender, EventArgs e)
@@ -81,6 +88,7 @@ namespace Cribbage
                 control.DataBind();
 
                 Session["Cards"] = cards;
+                Session["WhosTurn"] = "Pick crib cards";
             }
         }
 
@@ -99,6 +107,7 @@ namespace Cribbage
 
                 CribCard1.ImageUrl = "images/Card_Backs/b2fv.png";
                 CribCard1.DataBind();
+                Session["WhosTurn"] = "Pick crib cards";
             }
             else if (cards.Crib.Count() < 4)
             {
@@ -151,6 +160,7 @@ namespace Cribbage
 
                 if ((int)Session["PlayerCrib"] == 1)
                 {
+                    Session["WhosTurn"] = "It's the Computer's turn";
                     ScriptManager.RegisterStartupScript(this, GetType(), "Reload", "myVar = setInterval('ComputerTurn()', 3000)", true);
                 }
             }
@@ -203,15 +213,20 @@ namespace Cribbage
 
                 if (CounterLabel.Text != "0")
                 {
+                    Session["WhosTurn"] = "It's the Computer's turn";
                     ScriptManager.RegisterStartupScript(this, GetType(), "Reload", "myVar = setInterval('ComputerTurn()', 3000)", true);
                 }
 
                 if (Compute.AllDone(cards, 1))
                 {
                     if (Compute.AllDone(cards, 2))
+                    {
+                        Session["WhosTurn"] = "Final count";
                         ScriptManager.RegisterStartupScript(this, GetType(), "Reload", "myVar = setInterval('FinalCount()', 3000)", true);
+                    }
                     else
                     {
+                        Session["WhosTurn"] = "It's the Computer's turn";
                         ScriptManager.RegisterStartupScript(this, GetType(), "Reload", "myVar = setInterval('ComputerTurn()', 3000)", true);
                     }
                 }
@@ -251,6 +266,7 @@ namespace Cribbage
             {
                 if (Compute.AllDone(cards, 1) && Compute.AllDone(cards, 2))
                 {
+                    Session["WhosTurn"] = "Final count";
                     ScriptManager.RegisterStartupScript(this, GetType(), "Reload", "myVar = setInterval('FinalCount()', 3000)", true);
                 }
                 else
@@ -348,6 +364,7 @@ namespace Cribbage
                     CounterLabel.Text = "0";
                     if (Compute.FindLastPlayer(cards) == 2)
                     {
+                        Session["WhosTurn"] = "It's the Computer's turn";
                         ScriptManager.RegisterStartupScript(this, GetType(), "Reload", "myVar = setInterval('ComputerTurn()', 3000)", true);
                     }
                 }
@@ -376,7 +393,10 @@ namespace Cribbage
                 CounterLabel.Text = Compute.FindScore(cards).ToString();
 
                 if (Compute.LastCard(cards, 1) && !Compute.AllDone(cards, 1))
+                {
+                    Session["WhosTurn"] = "It's the Computer's turn";
                     ScriptManager.RegisterStartupScript(this, GetType(), "Reload", "myVar = setInterval('ComputerTurn()', 3000)", true);
+                }
 
                 PointBreakdown points = Compute.ComputePoints(cards);
 
@@ -393,10 +413,14 @@ namespace Cribbage
                 if (Compute.AllDone(cards, 1))
                 {
                     if (Compute.AllDone(cards, 2))
+                    {
+                        Session["WhosTurn"] = "Final count";
                         ScriptManager.RegisterStartupScript(this, GetType(), "Reload", "myVar = setInterval('FinalCount()', 3000)", true);
+                    }
                     else
                     {
                         //LastCardDiv.Visible = false;
+                        Session["WhosTurn"] = "It's the Computer's turn";
                         ScriptManager.RegisterStartupScript(this, GetType(), "Reload", "myVar = setInterval('ComputerTurn()', 3000)", true);
                     }
 
@@ -406,6 +430,7 @@ namespace Cribbage
                 if (Compute.LastCard(cards, 1) && Compute.LastCard(cards, 2))
                 {
                     this.CounterLabel.Text = "0";
+                    Session["WhosTurn"] = "It's the Computer's turn";
                     ScriptManager.RegisterStartupScript(this, GetType(), "Reload", "myVar = setInterval('ComputerTurn()', 3000)", true);
                 }
             }
@@ -528,6 +553,7 @@ namespace Cribbage
 
             if ((cards.Crib.Count() != 5 && cards.Crib.Count() != 0) || (cards.Crib.Count() == 5 && cards.Hand.Count == 0))
             {
+                Session["WhosTurn"] = "Final count";
                 ScriptManager.RegisterStartupScript(this, GetType(), "Reload", "myVar = setInterval('FinalCount()', 5000)", true);
             }
             else
@@ -572,11 +598,29 @@ namespace Cribbage
 
             //Enable deal button
             DealButtonDiv.Visible = true;
+
+            //Hide who's turn label
+            WhosTurnLabel.Visible = false;
         }
 
         protected void Winner(int player)
         {
             Response.Redirect("Winner.aspx?Player=" + player.ToString());
+        }
+
+        protected void SelectableCards(bool selectable)
+        {
+            for (int i = 0; i < 6; i++)
+            {
+                dynamic control = this.FindControl("PlayerCard" + (i + 1).ToString());
+                if (selectable)
+                {
+                    if (control.ImageUrl != null && control.CssClass != null)
+                        control.Enabled = true;
+                }
+                else
+                    control.Enabled = false;
+            }
         }
     }
 }
