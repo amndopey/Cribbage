@@ -178,7 +178,7 @@ namespace Cribbage
                 //Add to counter
                 if (cardValue > 10)
                     cardValue = 10;
-                CounterLabel.Text = (Int32.Parse(CounterLabel.Text) + cardValue).ToString();
+                CounterLabel.Text = Compute.FindScore(cards).ToString();
 
                 PointBreakdown points = Compute.ComputePoints(cards);
 
@@ -263,7 +263,11 @@ namespace Cribbage
             int cardToPlay = 0;
             int potentialPoints = 0;
             int highestPotentialPoints = 0;
-            int currentScore = Compute.FindScore(cards);
+            int currentScore = new int();
+            if (Compute.LastCard(cards, 1) && Compute.LastCard(cards, 2))
+                currentScore = 0;
+            else
+                currentScore = Compute.FindScore(cards);
 
             foreach (int index in compHand)
             {
@@ -366,10 +370,10 @@ namespace Cribbage
                 //Session["Played"] = storeIt;
 
                 //Strip suit and tally counter
-                int cardValue = Compute.StripSuit(cards.Hand[cardToPlay]);
-                if (cardValue > 10)
-                    cardValue = 10;
-                CounterLabel.Text = (Int32.Parse(CounterLabel.Text) + cardValue).ToString();
+                //int cardValue = Compute.StripSuit(cards.Hand[cardToPlay]);
+                //if (cardValue > 10)
+                //    cardValue = 10;
+                CounterLabel.Text = Compute.FindScore(cards).ToString();
 
                 if (Compute.LastCard(cards, 1) && !Compute.AllDone(cards, 1))
                     ScriptManager.RegisterStartupScript(this, GetType(), "Reload", "myVar = setInterval('ComputerTurn()', 3000)", true);
@@ -422,15 +426,15 @@ namespace Cribbage
             CounterDiv.Visible = false;
             WhosTurnDiv.Visible = false;
 
-            List<int> hand = (List<int>)Session["Hand"];
-            List<int> crib = (List<int>)Session["Crib"] ?? new List<int>();
+            Cards cards = (Cards)Session["Cards"];
+
             int playerCrib = (int)Session["PlayerCrib"];
             int playerCount = (int)Session["PlayerCount"];
             int points = 0;
             int beginCount = 0;
             List<int> countHand = new List<int>();
 
-            if (hand.Count() == 0)
+            if (cards.Hand.Count() == 0)
             {
                 for (int i = 0; i <= 12; i++)
                 {
@@ -447,9 +451,9 @@ namespace Cribbage
                 for (int i = beginCount; i < (beginCount + 5); i++)
                 {
                     dynamic control = this.FindControl("PlayerCard" + (i + 1).ToString());
-                    control.ImageUrl = "images/cards/" + crib[(i - beginCount)].ToString() + ".png";
+                    control.ImageUrl = "images/cards/" + cards.Crib[(i - beginCount)].ToString() + ".png";
                     control.CssClass = null;
-                    countHand.Add(crib[i - beginCount]);
+                    countHand.Add(cards.Crib[i - beginCount]);
                 }
 
                 for (int i = beginCount; i < (beginCount + 4); i++)
@@ -469,18 +473,15 @@ namespace Cribbage
             else
                 throw new IndexOutOfRangeException();
 
-            if (hand.Count() != 0)
+            if (cards.Hand.Count() != 0)
             {
                 for (int i = beginCount; i < (beginCount + 6); i++)
                 {
-                    dynamic control = this.FindControl("PlayerCard" + (i + 1).ToString());
-                    if (!String.IsNullOrEmpty(control.ImageUrl))
-                    {
-                        countHand.Add(hand[i]);
-                    }
+                    if (!cards.Crib.Contains(i))
+                        countHand.Add(cards.Hand[i]);
                 }
 
-                countHand.Add(hand[12]);
+                countHand.Add(cards.Hand[12]);
 
                 if (countHand.Count() != 5)
                 {
@@ -492,7 +493,7 @@ namespace Cribbage
 
             points = Compute.CountPoints(countHand);
 
-            if (hand.Count() != 0)
+            if (cards.Hand.Count() != 0)
                 Scoreboard.Items.Add("Player " + playerCount.ToString() + "'s hand scored " + points.ToString() + " points");
             else
                 Scoreboard.Items.Add("Player " + playerCount.ToString() + "'s crib scored " + points.ToString() + " points");
@@ -501,16 +502,16 @@ namespace Cribbage
             if (points > 0)
                 Session["BoardStatus"] = Compute.AddPointsToBoard((BoardStatus)Session["BoardStatus"], playerCount, points);
 
-            if (playerCount == playerCrib && hand.Count() != 0)
+            if (playerCount == playerCrib && cards.Hand.Count() != 0)
             {
                 List<int> fullCrib = new List<int>();
-                foreach (int index in crib)
+                foreach (int index in cards.Crib)
                 {
-                    fullCrib.Add(hand[index]);
+                    fullCrib.Add(cards.Hand[index]);
                 }
-                fullCrib.Add(hand[12]);
-                Session["Hand"] = new List<int>();
-                Session["Crib"] = fullCrib;
+                fullCrib.Add(cards.Hand[12]);
+                cards.Hand = new List<int>();
+                cards.Crib = fullCrib;
             }
             else if (playerCount == 1)
             {
@@ -521,17 +522,17 @@ namespace Cribbage
                 Session["PlayerCount"] = 1;
             }
 
-            if (crib.Count() != 5)
+            if (cards.Crib.Count() != 5)
             {
                 ScriptManager.RegisterStartupScript(this, GetType(), "Reload", "myVar = setInterval('FinalCount()', 5000)", true);
             }
             else
             {
-                Session["crib"] = new List<int>();
+                cards.Crib = new List<int>();
                 ScriptManager.RegisterStartupScript(this, GetType(), "Reload", "myVar = setInterval('ResetBoard()', 6000)", true);
-                return;
             }
 
+            Session["Cards"] = cards;
         }
 
         protected void ResetPlayArea(object sender, EventArgs e)

@@ -312,7 +312,7 @@ namespace Cribbage.Classes
         static public int FindScore(Cards cards)
         {
             int score = 0;
-            bool scoreReset = false;
+            bool scoreReset = true;
             
             foreach (int cardIndex in cards.Played)
             {
@@ -331,7 +331,27 @@ namespace Cribbage.Classes
                 }
             }
 
+            //Double check that score should not be 0
+            //for (int i = 0; i < 12; i++)
+            //{
+            //    if (cards.Played.Contains(i) || cards.Crib.Contains(i))
+            //        continue;
 
+            //    int strippedCard = Compute.StripSuit(cards.Hand[i]);
+
+            //    if (strippedCard > 10)
+            //        strippedCard = 10;
+
+            //    if (strippedCard + score <= 31)
+            //    {
+            //        scoreReset = false;
+            //    }
+            //}
+
+            //if (scoreReset)
+            //{
+            //    score = 0;
+            //}
 
             return score;
         }
@@ -353,8 +373,6 @@ namespace Cribbage.Classes
 
             foreach (int index in cards.Played.AsEnumerable().Reverse())
             {
-
-
                 int card = Compute.StripSuit(cards.Hand[index]);
 
                 if (card > 10)
