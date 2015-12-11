@@ -617,6 +617,9 @@ namespace Cribbage
             Cards cards = (Cards)Session["Cards"];
             int currentScore = 0;
 
+            if (cards.Hand.Count() == 0)
+                return;
+
             if (Compute.LastCard(cards, 1) && Compute.LastCard(cards, 2))
                 currentScore = 0;
             else
@@ -627,7 +630,7 @@ namespace Cribbage
                 dynamic control = this.FindControl("PlayerCard" + (i + 1).ToString());
                 if (selectable)
                 {
-                    if (control.ImageUrl != null && control.CssClass != null)
+                    if (cards.Played.IndexOf(i) == -1 && cards.Crib.IndexOf(i) == -1)
                     {
                         int strippedCard = Compute.StripSuit(cards.Hand[i]);
                         

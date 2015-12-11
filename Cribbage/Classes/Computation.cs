@@ -8,7 +8,7 @@ namespace Cribbage.Classes
 {
     public class Compute
     {
-        private const bool Debug = true;
+        private const bool Debug = false;
         
         static private IEnumerable<int> constructSetFromBits(int i)
         {
@@ -45,7 +45,7 @@ namespace Cribbage.Classes
             {
                 List<int> convertedPoints = new List<int>(item);
                 //Convert face cards to 10 points
-                for (int i = 0; i < convertedPoints.Count() - 1; i++)
+                for (int i = 0; i <= convertedPoints.Count() - 1; i++)
                     if (convertedPoints[i] > 10)
                         convertedPoints[i] = 10;
 
@@ -444,7 +444,7 @@ namespace Cribbage.Classes
                 results.Points += 2;
                 results.Breakdown.Add("Player " + lastPlayer.ToString() + " scored 31 for 2");
             }
-            if (LastCard(cards, 1) && LastCard(cards, 2))
+            else if (LastCard(cards, 1) && LastCard(cards, 2))
             {
                 results.Points++;
                 results.Breakdown.Add("Player " + lastPlayer.ToString() + " scored 1 for last card");
