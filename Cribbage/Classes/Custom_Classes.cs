@@ -72,5 +72,7 @@ namespace Cribbage.Classes
             }
             set { played = value; }
         }
+
+        public int PointCard { get; set; }
     }
 }

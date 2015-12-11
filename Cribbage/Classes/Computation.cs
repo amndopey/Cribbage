@@ -33,13 +33,14 @@ namespace Cribbage.Classes
             return produceEnumeration(allValues).ToList();
         }
 
-        static public int CountPoints(List<int> cardList)
+        static public int CountHand(List<int> cardList, int pointCard = 0)
         {
             int points = 0;
             int numCards = 0;
             int runPoints = 0;
             List<int> originalHand = new List<int>(cardList);
             cardList = StripSuit(cardList);
+            cardList.Add(pointCard);
 
             produceList(cardList).ForEach(item =>
             {
@@ -99,6 +100,30 @@ namespace Cribbage.Classes
                     points += 12;
             }
 
+            int suit = FindSuit(originalHand[0]);
+            int flushPoints = 0;
+            foreach (int card in originalHand)
+            {
+                if (FindSuit(card) == suit)
+                {
+                    flushPoints++;
+                }
+                else
+                {
+                    suit = 0;
+                    flushPoints = 0;
+                    break;
+                }
+            }
+
+            if (pointCard != 0)
+            {
+                if (flushPoints != 0 && FindSuit(pointCard) == suit)
+                    flushPoints++;
+
+                points += flushPoints;
+            }
+
             return points;
         }
 
@@ -112,7 +137,7 @@ namespace Cribbage.Classes
                 if (item.Count() != 4)
                     return;
 
-                int check = CountPoints(item);
+                int check = CountHand(item);
 
                 if (check > points)
                 {
@@ -143,7 +168,7 @@ namespace Cribbage.Classes
                 cards.Hand.Add(204);
                 cards.Hand.Add(209);
                 cards.Hand.Add(206);
-                cards.Hand.Add(207);
+                cards.PointCard = 207;
             }
             else
             {
@@ -158,9 +183,12 @@ namespace Cribbage.Classes
 
                     if (!cards.Hand.Contains(card))
                     {
-                        cards.Hand.Add(card);
+                        if (cards.Hand.Count() > 12)
+                            cards.Hand.Add(card);
+                        else
+                            cards.PointCard = card;
                     }
-                } while (cards.Hand.Count() < 13);
+                } while (cards.Hand.Count() < 12 && cards.PointCard == 0);
             }
             return cards;
         }
@@ -194,6 +222,20 @@ namespace Cribbage.Classes
                 return (card - 300);
             if (card > 400 && card < 499)
                 return (card - 400);
+
+            throw new ArgumentOutOfRangeException();
+        }
+
+        static public int FindSuit(int card)
+        {
+            if (card > 100 && card < 199)
+                return 1;
+            if (card > 200 && card < 299)
+                return 2;
+            if (card > 300 && card < 399)
+                return 3;
+            if (card > 400 && card < 499)
+                return 4;
 
             throw new ArgumentOutOfRangeException();
         }
@@ -236,35 +278,35 @@ namespace Cribbage.Classes
             return boardStatus;
         }
 
-        static public List<string> StoreOrder(List<int> played)
-        {
-            int myChar = 65;
-            List<string> modifiedList = new List<string>();
+        //static public List<string> StoreOrder(List<int> played)
+        //{
+        //    int myChar = 65;
+        //    List<string> modifiedList = new List<string>();
 
-            foreach (int index in played)
-            {
-                modifiedList.Add(((char)myChar).ToString() + index.ToString());
-                myChar++;
-            }
+        //    foreach (int index in played)
+        //    {
+        //        modifiedList.Add(((char)myChar).ToString() + index.ToString());
+        //        myChar++;
+        //    }
 
-            return modifiedList;
-        }
+        //    return modifiedList;
+        //}
 
-        static public List<int> RetrieveOrder(List<string> played)
-        {
-            List<int> returnedList = new List<int>();
+        //static public List<int> RetrieveOrder(List<string> played)
+        //{
+        //    List<int> returnedList = new List<int>();
             
-            foreach (string index in played.OrderBy(x => x).ToList())
-            {
-                Regex myRegex = new Regex(@"[^\d]");
+        //    foreach (string index in played.OrderBy(x => x).ToList())
+        //    {
+        //        Regex myRegex = new Regex(@"[^\d]");
 
-                string match = myRegex.Replace(index, "");
+        //        string match = myRegex.Replace(index, "");
 
-                returnedList.Add(Int16.Parse(match));
-            }
+        //        returnedList.Add(Int16.Parse(match));
+        //    }
 
-            return returnedList;
-        }
+        //    return returnedList;
+        //}
 
         static public int FindLastPlayer(Cards cards)
         {
@@ -331,28 +373,6 @@ namespace Cribbage.Classes
                 }
             }
 
-            //Double check that score should not be 0
-            //for (int i = 0; i < 12; i++)
-            //{
-            //    if (cards.Played.Contains(i) || cards.Crib.Contains(i))
-            //        continue;
-
-            //    int strippedCard = Compute.StripSuit(cards.Hand[i]);
-
-            //    if (strippedCard > 10)
-            //        strippedCard = 10;
-
-            //    if (strippedCard + score <= 31)
-            //    {
-            //        scoreReset = false;
-            //    }
-            //}
-
-            //if (scoreReset)
-            //{
-            //    score = 0;
-            //}
-
             return score;
         }
 
@@ -368,8 +388,6 @@ namespace Cribbage.Classes
             int repeat = 1;
             int tempPointsCheck = 0;
             string tempPointsCheckBreakdown = "";
-
-            //cards.Played.Reverse();
 
             foreach (int index in cards.Played.AsEnumerable().Reverse())
             {

@@ -516,15 +516,15 @@ namespace Cribbage
                         countHand.Add(cards.Hand[i]);
                 }
 
-                countHand.Add(cards.Hand[12]);
+                //countHand.Add(cards.Hand[12]);
 
-                if (countHand.Count() != 5)
+                if (countHand.Count() != 4)
                 {
                     throw new ArgumentOutOfRangeException();
                 }
             }
 
-            points = Compute.CountPoints(countHand);
+            points = Compute.CountHand(countHand, cards.Hand[12]);
 
             if (cards.Hand.Count() != 0)
                 Scoreboard.Items.Add("Player " + playerCount.ToString() + "'s hand scored " + points.ToString() + " points");
