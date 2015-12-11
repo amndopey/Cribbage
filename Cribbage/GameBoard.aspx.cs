@@ -16,6 +16,14 @@ namespace Cribbage
         protected void Page_LoadComplete(object sender, EventArgs e)
         {
             BoardStatus boardStatus = (BoardStatus)Session["BoardStatus"];
+
+            //Set who's turn it is
+            string whosTurn = (string)Session["WhosTurn"];
+            WhosTurnLabel.Text = whosTurn;
+
+            //Reset value to your turn
+            Session["WhosTurn"] = "It's Your Turn";
+
             if (boardStatus == null)
             {
                 boardStatus = new BoardStatus();
@@ -40,16 +48,15 @@ namespace Cribbage
                     Winner(2);
                 
                 Cribbage_Board.Controls.Add(RenderBoard.UpdateBoard(boardStatus));
+
+                //Enable or disable cards
+                if (whosTurn == "It's Your Turn" || whosTurn == "Pick crib cards")
+                    SelectableCards(true);
+                else
+                    SelectableCards(false);
             }
 
             Scoreboard.SelectedIndex = Scoreboard.Items.Count - 1;
-
-            //Set who's turn it is
-            string whosTurn = (string)Session["WhosTurn"];
-            WhosTurnLabel.Text = whosTurn;
-
-            //Reset value to your turn
-            Session["WhosTurn"] = "It's Your Turn";
         }
         
         protected void Page_Load(object sender, EventArgs e)
@@ -61,7 +68,7 @@ namespace Cribbage
         protected void DealButton_Click(object sender, EventArgs e)
         {
             DealButtonDiv.Visible = false;
-            WhosTurnDiv.Visible = true;
+            WhosTurnLabel.Visible = true;
             Cards cards = Compute.DealHand();
 
             if (cards.Hand == null)
@@ -451,8 +458,7 @@ namespace Cribbage
         protected void FinalCountButton_Click(object sender, EventArgs e)
         {
             CounterDiv.Visible = false;
-            WhosTurnDiv.Visible = false;
-
+            
             Cards cards = (Cards)Session["Cards"];
 
             int playerCrib = (int)Session["PlayerCrib"];
@@ -518,8 +524,6 @@ namespace Cribbage
                 }
             }
 
-            
-
             points = Compute.CountPoints(countHand);
 
             if (cards.Hand.Count() != 0)
@@ -553,7 +557,6 @@ namespace Cribbage
 
             if ((cards.Crib.Count() != 5 && cards.Crib.Count() != 0) || (cards.Crib.Count() == 5 && cards.Hand.Count == 0))
             {
-                Session["WhosTurn"] = "Final count";
                 ScriptManager.RegisterStartupScript(this, GetType(), "Reload", "myVar = setInterval('FinalCount()', 5000)", true);
             }
             else
@@ -563,6 +566,7 @@ namespace Cribbage
             }
 
             Session["Cards"] = cards;
+            Session["WhosTurn"] = "Final count";
         }
 
         protected void ResetPlayArea(object sender, EventArgs e)
@@ -610,13 +614,29 @@ namespace Cribbage
 
         protected void SelectableCards(bool selectable)
         {
+            Cards cards = (Cards)Session["Cards"];
+            int currentScore = 0;
+
+            if (Compute.LastCard(cards, 1) && Compute.LastCard(cards, 2))
+                currentScore = 0;
+            else
+                currentScore = Compute.FindScore(cards);
+            
             for (int i = 0; i < 6; i++)
             {
                 dynamic control = this.FindControl("PlayerCard" + (i + 1).ToString());
                 if (selectable)
                 {
                     if (control.ImageUrl != null && control.CssClass != null)
-                        control.Enabled = true;
+                    {
+                        int strippedCard = Compute.StripSuit(cards.Hand[i]);
+                        
+                        if (strippedCard > 10)
+                            strippedCard = 10;
+                        
+                        if (currentScore + strippedCard <= 31)
+                            control.Enabled = true;
+                    }
                 }
                 else
                     control.Enabled = false;

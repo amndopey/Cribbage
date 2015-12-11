@@ -76,8 +76,8 @@
         <div id="CribGoDiv" runat="server" visible="false">
             <h1 id="CribGoHeader" runat="server" style="font-size:2em;">Go</h1>
         </div>
-        <div id="WhosTurnDiv" runat="server" visible="false">
-            <asp:Label ID="WhosTurnLabel" runat="server" Text=""></asp:Label>
+        <div id="WhosTurnDiv" runat="server">
+            <asp:Label ID="WhosTurnLabel" runat="server" Text="" Visible="false"></asp:Label>
         </div>
         <div id="ScoreboardDiv" runat="server">
             <asp:ListBox ID="Scoreboard" runat="server" Height="134px" Width="232px"></asp:ListBox>
