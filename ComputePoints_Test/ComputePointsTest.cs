@@ -16,8 +16,8 @@ namespace CribbageTest
             hand.Add(103);
             hand.Add(102);
             hand.Add(111);
-            hand.Add(211);
-
+            
+            
             //hand.Add(103);
             //hand.Add(104);
             //hand.Add(405);
@@ -26,9 +26,9 @@ namespace CribbageTest
 
             //hand.Add(110);
 
-            int expected = 6;
+            int expected = 9;
 
-            int actual = Compute.CountPoints(hand);
+            int actual = Compute.CountHand(hand, 112);
 
             Assert.AreEqual(expected, actual);
         }

@@ -159,7 +159,7 @@ namespace Cribbage
                 }
 
                 //Show extra card
-                this.PlayerCard13.ImageUrl = "images/cards/" + cards.Hand[12].ToString() + ".png";
+                this.PlayerCard13.ImageUrl = "images/cards/" + cards.PointCard.ToString() + ".png";
 
                 //Show counter
                 this.CounterDiv.Visible = true;
@@ -390,13 +390,7 @@ namespace Cribbage
 
                 //Add card to played array
                 cards.Played.Add(cardToPlay);
-                //List<string> storeIt = Compute.StoreOrder(played);
-                //Session["Played"] = storeIt;
 
-                //Strip suit and tally counter
-                //int cardValue = Compute.StripSuit(cards.Hand[cardToPlay]);
-                //if (cardValue > 10)
-                //    cardValue = 10;
                 CounterLabel.Text = Compute.FindScore(cards).ToString();
 
                 if (Compute.LastCard(cards, 1) && !Compute.AllDone(cards, 1))
@@ -469,7 +463,7 @@ namespace Cribbage
 
             if (cards.Hand.Count() == 0)
             {
-                for (int i = 0; i <= 12; i++)
+                for (int i = 0; i < 12; i++)
                 {
                     dynamic control = this.FindControl("PlayerCard" + (i + 1).ToString());
                     control.ImageUrl = null;
@@ -481,7 +475,7 @@ namespace Cribbage
                 else
                     beginCount = 6;
 
-                for (int i = beginCount; i < (beginCount + 5); i++)
+                for (int i = beginCount; i < (beginCount + 4); i++)
                 {
                     dynamic control = this.FindControl("PlayerCard" + (i + 1).ToString());
                     control.ImageUrl = "images/cards/" + cards.Crib[(i - beginCount)].ToString() + ".png";
@@ -524,7 +518,7 @@ namespace Cribbage
                 }
             }
 
-            points = Compute.CountHand(countHand, cards.Hand[12]);
+            points = Compute.CountHand(countHand, cards.PointCard);
 
             if (cards.Hand.Count() != 0)
                 Scoreboard.Items.Add("Player " + playerCount.ToString() + "'s hand scored " + points.ToString() + " points");
@@ -542,7 +536,7 @@ namespace Cribbage
                 {
                     fullCrib.Add(cards.Hand[index]);
                 }
-                fullCrib.Add(cards.Hand[12]);
+                //fullCrib.Add(cards.PointCard);
                 cards.Hand = new List<int>();
                 cards.Crib = fullCrib;
             }
@@ -555,13 +549,14 @@ namespace Cribbage
                 Session["PlayerCount"] = 1;
             }
 
-            if ((cards.Crib.Count() != 5 && cards.Crib.Count() != 0) || (cards.Crib.Count() == 5 && cards.Hand.Count == 0))
+            if ((cards.Crib.Count() != 5 && cards.Crib.Count() != 0) || (cards.Crib.Count() == 4 && cards.Hand.Count == 0))
             {
                 ScriptManager.RegisterStartupScript(this, GetType(), "Reload", "myVar = setInterval('FinalCount()', 5000)", true);
             }
             else
             {
                 cards.Crib = new List<int>();
+                cards.PointCard = 0;
                 ScriptManager.RegisterStartupScript(this, GetType(), "Reload", "myVar = setInterval('ResetBoard()', 6000)", true);
             }
 
