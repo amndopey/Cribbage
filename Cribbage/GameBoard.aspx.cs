@@ -289,7 +289,6 @@ namespace Cribbage
 
             int cardToPlay = 0;
             int potentialPoints = 0;
-            int highestPotentialPoints = 0;
             int currentScore = new int();
             if (Compute.LastCard(cards, 1) && Compute.LastCard(cards, 2))
                 currentScore = 0;
@@ -309,50 +308,16 @@ namespace Cribbage
                     continue;
                 }
 
-                if (points == 15)
-                {
-                    potentialPoints += 2;
-                }
+                PointBreakdown pointCheck = Compute.ComputePoints(cards);
 
-                if (points == 31)
-                {
-                    potentialPoints += 2;
-                }
-
-                //Check if last 3 cards were played the same for a quad
-                if (cards.Played.Count() > 3 &&
-                    card == Compute.StripSuit(cards.Hand[cards.Played[cards.Played.Count - 1]]) &&
-                    card == Compute.StripSuit(cards.Hand[cards.Played[cards.Played.Count - 2]]) &&
-                    card == Compute.StripSuit(cards.Hand[cards.Played[cards.Played.Count - 3]]))
-                {
-                    potentialPoints += 12;
-                }
-
-                //Check if last 2 cards were played the same for a triple
-                else if (cards.Played.Count() > 2 &&
-                    card == Compute.StripSuit(cards.Hand[cards.Played[cards.Played.Count - 1]]) &&
-                    card == Compute.StripSuit(cards.Hand[cards.Played[cards.Played.Count - 2]]))
-                {
-                    potentialPoints += 6;
-                }
-
-                //Check if last card played was the same number (for double)
-                else if (cards.Played.Count() > 1 &&
-                    card == Compute.StripSuit(cards.Hand[cards.Played[cards.Played.Count - 1]]))
-                {
-                    potentialPoints += 2;
-                }
-
-                //TODO: Add check for run
-
-                //Check if potential points is higher than highest points found
-                if (potentialPoints > highestPotentialPoints || cardToPlay == 0)
+                if (pointCheck.Points > potentialPoints)
                 {
                     cardToPlay = index;
-                    highestPotentialPoints = potentialPoints;
                 }
-
-                //TODO: Add check to play highest valued card
+                else if (cards.Hand[index] > cardToPlay && potentialPoints == 0)
+                {
+                    cardToPlay = index;
+                }
             }
          
             if (cardToPlay == 0)

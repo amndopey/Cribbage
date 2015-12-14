@@ -320,7 +320,7 @@ namespace Cribbage.Classes
                     return 2;
             }
 
-            throw new IndexOutOfRangeException();
+            return 0;
         }
 
         static public bool LastCard(Cards cards, int player)
