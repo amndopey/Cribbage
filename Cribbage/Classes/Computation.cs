@@ -389,8 +389,9 @@ namespace Cribbage.Classes
             int tempPointsCheck = 0;
             string tempPointsCheckBreakdown = "";
             List<int> runCheck = new List<int>();
-            int run = 0;
+            List<int> run = new List<int>();
             int runScore = 0;
+            List<int> runCards = new List<int>();
 
             foreach (int index in cards.Played.AsEnumerable().Reverse())
             {
@@ -410,30 +411,12 @@ namespace Cribbage.Classes
                     break;
                 }
 
+                //Check for a run
                 runCheck.Add(card);
 
-                for (int i = 0; i < runCheck.Count(); i++)
+                if (runCheck.Max() - (runCheck.Min() - 1) == runCheck.Count() && runCheck.Count() >= 3)
                 {
-                    for (int j = 1; j <= 13; j++)
-                    {
-                        if (runCheck.Contains(j))
-                        {
-                            run++;
-                        }
-                        else
-                        {
-                            if (run >= 3)
-                            {
-                                runScore = run;
-                            }
-                            else
-                            {
-                                runScore = 0;
-                            }
-
-                            run = 0;
-                        }
-                    }
+                    runScore = runCheck.Count();
                 }
 
                 if (card == lastCard && repeat != 0)

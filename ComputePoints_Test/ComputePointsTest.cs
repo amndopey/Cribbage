@@ -12,7 +12,7 @@ namespace CribbageTest
         public void ComputePoints()
         {
             List<int> hand = new List<int>();
-            hand.Add(108);
+            hand.Add(110);
             hand.Add(103);
             hand.Add(102);
             hand.Add(111);
@@ -26,7 +26,7 @@ namespace CribbageTest
 
             //hand.Add(110);
 
-            int expected = 9;
+            int expected = 14;
 
             int actual = Compute.CountHand(hand, 112);
 
