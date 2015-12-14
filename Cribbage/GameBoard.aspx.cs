@@ -93,10 +93,14 @@ namespace Cribbage
                 if (index < 7)
                     control.Enabled = true;
                 control.DataBind();
-
-                Session["Cards"] = cards;
-                Session["WhosTurn"] = "Pick crib cards";
             }
+
+            dynamic pointCardControl = this.FindControl("Playercard13");
+            pointCardControl.ImageUrl = "images/Card_Backs/b1fv.png";
+            pointCardControl.DataBind();
+            
+            Session["Cards"] = cards;
+            Session["WhosTurn"] = "Pick crib cards";
         }
 
         protected void CardClick(object sender, CommandEventArgs e)
@@ -549,7 +553,7 @@ namespace Cribbage
                 Session["PlayerCount"] = 1;
             }
 
-            if ((cards.Crib.Count() != 5 && cards.Crib.Count() != 0) || (cards.Crib.Count() == 4 && cards.Hand.Count == 0))
+            if ((cards.Crib.Count() != 5 && cards.Crib.Count() != 0) || (cards.Crib.Count() == 4 && cards.Hand.Count() == 0))
             {
                 ScriptManager.RegisterStartupScript(this, GetType(), "Reload", "myVar = setInterval('FinalCount()', 5000)", true);
             }

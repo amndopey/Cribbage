@@ -8,7 +8,7 @@ namespace Cribbage.Classes
 {
     public class Compute
     {
-        private const bool Debug = true;
+        private const bool Debug = false;
         
         static private IEnumerable<int> constructSetFromBits(int i)
         {
@@ -183,12 +183,12 @@ namespace Cribbage.Classes
 
                     if (!cards.Hand.Contains(card))
                     {
-                        if (cards.Hand.Count() > 12)
+                        if (cards.Hand.Count() < 12)
                             cards.Hand.Add(card);
                         else
                             cards.PointCard = card;
                     }
-                } while (cards.Hand.Count() < 12 && cards.PointCard == 0);
+                } while (cards.Hand.Count() < 12 || cards.PointCard == 0);
             }
             return cards;
         }
@@ -414,7 +414,7 @@ namespace Cribbage.Classes
                 //Check for a run
                 runCheck.Add(card);
 
-                if (runCheck.Max() - (runCheck.Min() - 1) == runCheck.Count() && runCheck.Count() >= 3)
+                if (runCheck.Max() - runCheck.Min() + 1 == runCheck.Count() && runCheck.Count() >= 3)
                 {
                     runScore = runCheck.Count();
                 }
