@@ -413,8 +413,11 @@ namespace Cribbage.Classes
 
                 //Check for a run
                 runCheck.Add(card);
+                int groupedCheck = runCheck.GroupBy(i => i).Count();
 
-                if (runCheck.Max() - runCheck.Min() + 1 == runCheck.Count() && runCheck.Count() >= 3)
+                if (runCheck.Max() - runCheck.Min() + 1 == runCheck.Count() &&
+                    runCheck.Count() >= 3 &&
+                    groupedCheck == runCheck.Count())
                 {
                     runScore = runCheck.Count();
                 }
