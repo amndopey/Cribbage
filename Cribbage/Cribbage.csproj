@@ -133,10 +133,10 @@
     <Content Include="Images\Card_Backs\b2pr.png" />
     <Content Include="Images\cribbage_board.jpg" />
     <Content Include="Images\Felt.png" />
-    <Content Include="Images\start.jpg" />
     <Content Include="Images\Start_screen.bmp" />
     <Content Include="packages.config" />
     <Content Include="Winner.aspx" />
+    <None Include="Properties\PublishProfiles\OurCribbage.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
