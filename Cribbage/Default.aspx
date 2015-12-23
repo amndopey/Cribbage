@@ -14,7 +14,7 @@
         Welcome to Cribbage!
     </div>
         <div id="login_link">
-            Please <a href="GameBoard.aspx">click here</a> to play
+            Please <a href="Color_Selection.aspx">click here</a> to play
         </div>
     </form>
 </body>

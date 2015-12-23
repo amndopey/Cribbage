@@ -26,11 +26,29 @@ namespace Cribbage
 
             if (boardStatus == null)
             {
+                String color = Request.QueryString["Color"];
+
+                if (String.IsNullOrEmpty(color))
+                {
+                    color = "Red";
+                }
+
+                Brush playerBrush = new SolidBrush(Color.FromName(color));
+                
                 boardStatus = new BoardStatus();
-                boardStatus.P1Color = Brushes.Red;
+                boardStatus.P1Color = playerBrush;
                 boardStatus.P1FirstPeg = 0;
                 boardStatus.P1SecondPeg = 1;
-                boardStatus.P2Color = Brushes.Blue;
+
+                if (color == "Blue")
+                {
+                    boardStatus.P2Color = Brushes.Red;
+                }
+                else
+                {
+                    boardStatus.P2Color = Brushes.Blue;
+                }
+
                 boardStatus.P2FirstPeg = 0;
                 boardStatus.P2SecondPeg = 1;
 
@@ -50,7 +68,7 @@ namespace Cribbage
                 Cribbage_Board.Controls.Add(RenderBoard.UpdateBoard(boardStatus));
 
                 //Enable or disable cards
-                if (whosTurn == "It's Your Turn" || whosTurn == "Pick crib cards")
+                if (whosTurn == "It's Your Turn" || whosTurn == "Pick Player " + Session["PlayerCrib"] + "'s crib")
                     SelectableCards(true);
                 else
                     SelectableCards(false);
@@ -90,6 +108,7 @@ namespace Cribbage
                 dynamic control = this.FindControl("PlayerCard" + index.ToString());
                 //control.ToolTip = card.ToString();
                 control.ImageUrl = fileString;
+                control.Visible = true;
                 if (index < 7)
                     control.Enabled = true;
                 control.DataBind();
@@ -97,10 +116,11 @@ namespace Cribbage
 
             dynamic pointCardControl = this.FindControl("Playercard13");
             pointCardControl.ImageUrl = "images/Card_Backs/b1fv.png";
+            pointCardControl.Visible = true;
             pointCardControl.DataBind();
             
             Session["Cards"] = cards;
-            Session["WhosTurn"] = "Pick crib cards";
+            Session["WhosTurn"] = "Pick Player " + Session["PlayerCrib"] + "'s crib";
         }
 
         protected void CardClick(object sender, CommandEventArgs e)
@@ -113,12 +133,13 @@ namespace Cribbage
             {
                 cards.Crib.Add(Int32.Parse(e.CommandName) - 1);
                 dynamic control = this.FindControl("PlayerCard" + e.CommandName);
-                control.ImageUrl = null;
+                control.Visible = false;;
                 control.DataBind();
 
                 CribCard1.ImageUrl = "images/Card_Backs/b2fv.png";
+                CribCard1.Visible = true;
                 CribCard1.DataBind();
-                Session["WhosTurn"] = "Pick crib cards";
+                Session["WhosTurn"] = "Pick Player " + Session["PlayerCrib"] + "'s crib";
             }
             else if (cards.Crib.Count() < 4)
             {
@@ -127,10 +148,11 @@ namespace Cribbage
 
                 cards.Crib.Add(Int32.Parse(e.CommandName) - 1);
                 dynamic control = this.FindControl("PlayerCard" + e.CommandName);
-                control.ImageUrl = null;
+                control.Visible = false;
                 control.DataBind();
 
                 CribCard2.ImageUrl = "images/Card_Backs/b2pr.png";
+                CribCard2.Visible = true;
                 CribCard2.DataBind();
 
                 for (int i = 6; i <= 11; i++)
@@ -146,17 +168,19 @@ namespace Cribbage
                     {
                         cards.Crib.Add(i);
                         dynamic control2 = this.FindControl("PlayerCard" + (i + 1).ToString());
-                        control2.ImageUrl = null;
+                        control2.Visible = false;
                         control2.DataBind();
 
                         if (cards.Crib.Count() == 3)
                         {
                             CribCard3.ImageUrl = "images/Card_Backs/b1pr.png";
+                            CribCard3.Visible = true;
                             CribCard3.DataBind();
                         }
                         if (cards.Crib.Count() == 4)
                         {
                             CribCard4.ImageUrl = "images/Card_Backs/b1pr.png";
+                            CribCard4.Visible = true;
                             CribCard4.DataBind();
                         }
                     }
@@ -164,6 +188,7 @@ namespace Cribbage
 
                 //Show extra card
                 this.PlayerCard13.ImageUrl = "images/cards/" + cards.PointCard.ToString() + ".png";
+                this.PlayerCard13.Visible = true;
 
                 //Show counter
                 this.CounterDiv.Visible = true;
@@ -180,6 +205,7 @@ namespace Cribbage
                 //Shade played card and disable the link
                 dynamic control = this.FindControl("PlayerCard" + e.CommandName);
                 control.ImageUrl = "images/Cards/" + cards.Hand[Int32.Parse(e.CommandName) - 1].ToString() + ".png";
+                control.Visible = true;
                 control.CssClass = "ShadedCards";
                 control.Enabled = false;
                 control.DataBind();
@@ -354,6 +380,7 @@ namespace Cribbage
             {
                 dynamic control = this.FindControl("PlayerCard" + (cardToPlay + 1).ToString());
                 control.ImageUrl = "images/Cards/" + cards.Hand[cardToPlay].ToString() + ".png";
+                control.Visible = true;
                 control.Enabled = false;
                 control.DataBind();
 
@@ -435,7 +462,7 @@ namespace Cribbage
                 for (int i = 0; i < 12; i++)
                 {
                     dynamic control = this.FindControl("PlayerCard" + (i + 1).ToString());
-                    control.ImageUrl = null;
+                    control.Visible = false;;
                     control.Enabled = false;
                 }
 
@@ -448,6 +475,7 @@ namespace Cribbage
                 {
                     dynamic control = this.FindControl("PlayerCard" + (i + 1).ToString());
                     control.ImageUrl = "images/cards/" + cards.Crib[(i - beginCount)].ToString() + ".png";
+                    control.Visible = true;
                     control.CssClass = null;
                     countHand.Add(cards.Crib[i - beginCount]);
                 }
@@ -455,7 +483,7 @@ namespace Cribbage
                 for (int i = beginCount; i < (beginCount + 4); i++)
                 {
                     dynamic control2 = this.FindControl("CribCard" + ((i - beginCount) + 1).ToString());
-                    control2.ImageUrl = null;
+                    control2.Visible = false;
                 }
 
                 cards.Crib = new List<int>();
@@ -556,7 +584,7 @@ namespace Cribbage
             for (int i = 0; i <= 12; i++)
             {
                 dynamic control = this.FindControl("PlayerCard" + (i + 1).ToString());
-                control.ImageUrl = null;
+                control.Visible = false;;
                 control.CssClass = null;
                 control.Enabled = false;
             }

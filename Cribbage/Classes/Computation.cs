@@ -341,7 +341,7 @@ namespace Cribbage.Classes
                     if (cardCheck > 10)
                         cardCheck = 10;
 
-                    if (score + cardCheck < 31)
+                    if (score + cardCheck <= 31)
                     {
                         return false;
                     }

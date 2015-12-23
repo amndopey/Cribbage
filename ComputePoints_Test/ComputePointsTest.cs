@@ -12,10 +12,10 @@ namespace CribbageTest
         public void ComputePoints()
         {
             List<int> hand = new List<int>();
-            hand.Add(106);
-            hand.Add(107);
-            hand.Add(108);
-            hand.Add(202);
+            hand.Add(103);
+            hand.Add(104);
+            hand.Add(101);
+            hand.Add(201);
             
             
             //hand.Add(103);
@@ -28,7 +28,7 @@ namespace CribbageTest
 
             int expected = 8;
 
-            int actual = Compute.CountHand(hand, 109);
+            int actual = Compute.CountHand(hand, 111);
 
             Assert.AreEqual(expected, actual);
         }

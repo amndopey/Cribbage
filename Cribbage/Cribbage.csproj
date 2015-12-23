@@ -66,6 +66,8 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Color_Selection.aspx" />
+    <Content Include="CSS\Color_Selection.css" />
     <Content Include="CSS\Default_Stylesheet.css" />
     <Content Include="CSS\GameBoard.css" />
     <Content Include="CSS\Winner.css" />
@@ -150,6 +152,13 @@
   <ItemGroup>
     <Compile Include="Classes\Custom_Classes.cs" />
     <Compile Include="Classes\RenderBoard.cs" />
+    <Compile Include="Color_Selection.aspx.cs">
+      <DependentUpon>Color_Selection.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Color_Selection.aspx.designer.cs">
+      <DependentUpon>Color_Selection.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
